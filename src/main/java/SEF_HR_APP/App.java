@@ -14,14 +14,19 @@ public class App {
 
     public static void main(String[] args) {
 
+
+        //Setting up taskListener for backend
         BackendTaskListener backendTaskListener = new BackendTaskListener();
         BackendHandler.setTaskListener(backendTaskListener);
 
+        //Starting backend thread
         Thread backendThread = new Thread(backendTaskListener);
         backendThread.start();
 
+        //Starting frontend
         MainLogin.main(args);
 
+        //Stopping backend Thread if unexpected exit happened from frontend
         SignalHandler.setSignal(new ApplicationClosingSignal());
     }
 }

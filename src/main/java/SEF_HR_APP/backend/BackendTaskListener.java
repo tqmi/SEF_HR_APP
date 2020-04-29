@@ -7,16 +7,20 @@ public class BackendTaskListener implements Runnable{
     private volatile boolean running = false;
     private Thread runningThread;
 
+    /**
+     * Main loop for backend thread
+     */
     @Override
     public void run() {
 
         running = true;
+        //Get running thread
         runningThread = Thread.currentThread();
         
         System.out.println("Running on thread " + runningThread.getId());
 
         while(running){
-
+            //Check if new signals have been received
             SignalHandler.readSignals();
             
         }
@@ -27,6 +31,9 @@ public class BackendTaskListener implements Runnable{
     }
 
 
+    /**
+     * Function called for stopping backend tasks
+     */
     public void stop(){
         System.out.println("Backend shutting down!");
         running = false;

@@ -9,6 +9,10 @@ public class SignalHandler {
 
     private static volatile ConcurrentLinkedQueue<Signal> signalQueue = new ConcurrentLinkedQueue<>();
 
+    /**
+     * Send a signal to backend for processing
+     * @param s
+     */
     public static void setSignal(Signal s) {
         synchronized (signalQueue) {
             s.setSignal();
@@ -17,10 +21,9 @@ public class SignalHandler {
         }
     }
 
-    private SignalHandler(){
-        
-    }
-
+    /**
+     * 
+     */
     public static void readSignals() {
         int size;
         ArrayList<Signal> signals = new ArrayList<>();
