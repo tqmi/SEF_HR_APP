@@ -2,6 +2,9 @@ package SEF_HR_APP.frontend.scenes;
 
 import SEF_HR_APP.frontend.MainLogin;
 import SEF_HR_APP.frontend.popUpBoxes.TEMPAlertBoxLogIn;
+import SEF_HR_APP.interfaces.SignalHandler;
+import SEF_HR_APP.interfaces.signals.AuthenticationSignalResponse;
+import SEF_HR_APP.interfaces.signals.AuthenticationSignal;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -62,8 +65,14 @@ public class LoginScene extends Scene {
             
             public void handle(MouseEvent e){
 				
-                //app.transToLogin2();
-                TEMPAlertBoxLogIn.display("Log In Alert", "Login process was successful");
+				SignalHandler.setSignalBackend(new AuthenticationSignal(userBox.getText(), passBox.getText()));
+				
+				AuthenticationSignalResponse rsp = (AuthenticationSignalResponse) SignalHandler.readSignalsFrontend();
+
+				if(rsp.getAuthenticationResult())      //problem here: is always false ///////////////////
+					app.transToMainScene();
+				else
+					TEMPAlertBoxLogIn.display("Log In Alert", "Failed Login");
 				
             }
 
@@ -71,14 +80,6 @@ public class LoginScene extends Scene {
 		
         this.setRoot(grid);
     }
-
-    /*private boolean IsuserBoxEmpty(TextField user)
-	{
-		if(user.getText().trim().isEmpty())
-			return false;
-		else
-			return true;
-	}*/
 
 
 

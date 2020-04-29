@@ -11,6 +11,7 @@ public class AuthenticationSignal implements Signal{
     public AuthenticationSignal(String uname, String pass){
         this.uname = uname;
         this.pass = pass;
+
     }
 
     @Override

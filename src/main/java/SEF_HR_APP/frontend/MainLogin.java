@@ -7,6 +7,7 @@ import SEF_HR_APP.interfaces.signals.ApplicationClosingSignal;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import SEF_HR_APP.frontend.scenes.MainScene;
 
 public class MainLogin extends Application {
 
@@ -52,4 +53,11 @@ public class MainLogin extends Application {
 			window.close();
 		}
 	}	
+
+	//implement transition to empty scene
+	public void transToMainScene(){
+		Scene scene = new MainScene(500, 350, this);
+		window.setScene(scene);
+		window.show();
+	}
 }
