@@ -1,5 +1,9 @@
-package SEF_HR_APP;
+package SEF_HR_APP.frontend;
 
+import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBoxExit;
+import SEF_HR_APP.frontend.scenes.LoginScene;
+import SEF_HR_APP.interfaces.SignalHandler;
+import SEF_HR_APP.interfaces.signals.ApplicationClosingSignal;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -10,8 +14,10 @@ public class MainLogin extends Application {
 	{
 		launch(args);
 	}
+	
+	
+	private Stage window;
 
-	Stage window;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception 
@@ -20,7 +26,7 @@ public class MainLogin extends Application {
 		window.setTitle("SHA Login");
 
 		//lambda expression for shutting down program
-		window.setOnCloseRequest(e -> {
+		window.setOnCloseRequest(e->{
 			e.consume();
 			closeProgram();
 		});
@@ -34,13 +40,16 @@ public class MainLogin extends Application {
 
 	private void closeProgram()
 	{
+
 		Boolean answer = TEMPConfirmBoxExit.display("Close program alert", "Are you sure you want to exit?");
 		/*
 			code to be parsed after user 
 			sends command for closing program
 			i.e. saving on db
 		*/
-		if(answer)
+		if(answer){
+			SignalHandler.setSignal(new ApplicationClosingSignal());
 			window.close();
+		}
 	}	
 }

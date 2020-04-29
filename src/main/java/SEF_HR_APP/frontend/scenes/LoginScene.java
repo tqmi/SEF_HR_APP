@@ -1,5 +1,7 @@
-package SEF_HR_APP;
+package SEF_HR_APP.frontend.scenes;
 
+import SEF_HR_APP.frontend.MainLogin;
+import SEF_HR_APP.frontend.popUpBoxes.TEMPAlertBoxLogIn;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -54,7 +56,8 @@ public class LoginScene extends Scene {
         //positioning and sizing "Sign in" button
 		hbtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbtn.getChildren().add(signin_button);
-        grid.add(hbtn, 1, 4);
+		grid.add(hbtn, 1, 4);
+		
         signin_button.setOnMouseClicked(new EventHandler<MouseEvent>() {
             
             public void handle(MouseEvent e){
@@ -64,7 +67,8 @@ public class LoginScene extends Scene {
 				
             }
 
-        });
+		});
+		
         this.setRoot(grid);
     }
 

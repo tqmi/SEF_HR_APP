@@ -1,4 +1,4 @@
-package SEF_HR_APP;
+package SEF_HR_APP.frontend.popUpBoxes;
 
 import javafx.stage.*;
 import javafx.scene.*;
