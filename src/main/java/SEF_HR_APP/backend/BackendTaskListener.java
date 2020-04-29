@@ -21,7 +21,7 @@ public class BackendTaskListener implements Runnable{
 
         while(running){
             //Check if new signals have been received
-            SignalHandler.readSignals();
+            SignalHandler.readSignalsBackend();
             
         }
 

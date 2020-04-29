@@ -48,7 +48,7 @@ public class MainLogin extends Application {
 			i.e. saving on db
 		*/
 		if(answer){
-			SignalHandler.setSignal(new ApplicationClosingSignal());
+			SignalHandler.setSignalBackend(new ApplicationClosingSignal());
 			window.close();
 		}
 	}	

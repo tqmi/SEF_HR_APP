@@ -27,6 +27,6 @@ public class App {
         MainLogin.main(args);
 
         //Stopping backend Thread if unexpected exit happened from frontend
-        SignalHandler.setSignal(new ApplicationClosingSignal());
+        SignalHandler.setSignalBackend(new ApplicationClosingSignal());
     }
 }
