@@ -1,6 +1,6 @@
 package SEF_HR_APP.frontend;
 
-import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBoxExit;
+import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 import SEF_HR_APP.frontend.scenes.LoginScene;
 import SEF_HR_APP.interfaces.SignalHandler;
 import SEF_HR_APP.interfaces.signals.ApplicationClosingSignal;
@@ -42,7 +42,7 @@ public class MainLogin extends Application {
 	private void closeProgram()
 	{
 
-		Boolean answer = TEMPConfirmBoxExit.display("Close program alert", "Are you sure you want to exit?");
+		Boolean answer = TEMPConfirmBox.display("Close program alert", "Are you sure you want to exit?");
 		/*
 			code to be parsed after user 
 			sends command for closing program
@@ -54,9 +54,18 @@ public class MainLogin extends Application {
 		}
 	}	
 
-	//implement transition to empty scene
+	//implement transition to main scene
 	public void transToMainScene(){
 		Scene scene = new MainScene(500, 350, this);
+		window.setTitle("HRSolution");
+		window.setScene(scene);
+		window.show();
+	}
+
+	//implement transition to login scene
+	public void transToLoginScene(){
+		Scene scene = new LoginScene(500, 350, this);
+		window.setTitle("SHA Login");
 		window.setScene(scene);
 		window.show();
 	}
