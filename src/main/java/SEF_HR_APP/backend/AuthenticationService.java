@@ -4,7 +4,7 @@ public class AuthenticationService {
 
     public static boolean authenticate(String uname, String pass){
 
-        if(uname == "admin" && pass == "notAdmin")
+        if(uname.equals("admin") && pass.equals("notAdmin"))
             return true;
 
         return false;

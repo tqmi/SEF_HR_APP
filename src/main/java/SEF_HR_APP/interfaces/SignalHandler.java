@@ -81,7 +81,7 @@ public class SignalHandler {
 
             while (signalQueueFrontend.isEmpty()) {
                 try {
-                    signalQueueFrontend.wait(20000);
+                    signalQueueFrontend.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     return null;
