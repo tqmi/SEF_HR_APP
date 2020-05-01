@@ -17,7 +17,7 @@ public class TEMPConfirmBox {
     private static Label label;
     private static Button yesButton;
     private static Button noButton;
-    private static HBox layout = new HBox(10);
+    private static HBox layout;
     private static Scene scene;
 
     public static boolean display(String title, String message) {
@@ -58,6 +58,7 @@ public class TEMPConfirmBox {
 
 
         //add and position message
+        layout = new HBox(10);
         layout.getChildren().addAll(label, yesButton, noButton);
         layout.setAlignment(Pos.CENTER);
 

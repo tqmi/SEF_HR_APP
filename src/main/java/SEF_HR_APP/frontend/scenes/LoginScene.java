@@ -25,18 +25,20 @@ public class LoginScene extends Scene {
 	private Text scenetitle;
 
 	private Label userName;
-	private TextField userBox = new TextField();
+	private TextField userBox;
 
 	private Label pass;
-	private PasswordField passBox = new PasswordField();
+	private PasswordField passBox;
 
 	private Button signin_button;
-	private HBox hbtn = new HBox(10);
+	private HBox hbtn;
+	private MainLogin app;
 
 
 
     public LoginScene(double width, double height,MainLogin app) {
-        super(new GridPane(), width, height);
+		super(new GridPane(), width, height);
+		this.app = app;
     
         /*used Grid panelling layout style for getting user input
 		instace for Grid Panel with positioning on scene
@@ -55,18 +57,21 @@ public class LoginScene extends Scene {
 
         //creating Username block & pos
 		userName = new Label("Username:");
-		grid.add(userName, 0, 1);	
+		grid.add(userName, 0, 1);
+		userBox = new TextField();	
 		grid.add(userBox, 1, 1);
 
         //creating Password block & pos
 		pass = new Label("Password:");
 		grid.add(pass, 0, 2);
+		passBox = new PasswordField();
 		grid.add(passBox, 1, 2);
 
         //instance for "Sign in" button 
 		signin_button = new Button("Sign in");
         
-        //positioning and sizing "Sign in" button
+		//positioning and sizing "Sign in" button
+		hbtn = new HBox(10);
 		hbtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbtn.getChildren().add(signin_button);
 		grid.add(hbtn, 1, 4);
@@ -95,6 +100,8 @@ public class LoginScene extends Scene {
 	}
 
 	private class AuthenticationSucceededHandler implements EventHandler<Event>{
+
+		
 
 		@Override
 			public void handle(Event event) {
