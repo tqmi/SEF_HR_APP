@@ -18,6 +18,7 @@ public class MainLogin extends Application {
 	
 	
 	private Stage window;
+	private Scene scene;
 
 
 	@Override
@@ -33,7 +34,7 @@ public class MainLogin extends Application {
 		});
 
 		//instance for Login Scene
-		Scene scene = new LoginScene(500, 350, this);
+		scene = new LoginScene(500, 350, this);
 		
 		window.setScene(scene);
 		window.show();

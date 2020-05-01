@@ -4,6 +4,8 @@ import javafx.stage.*;
 import javafx.scene.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.*;
 
 public class TEMPConfirmBox {
@@ -11,43 +13,56 @@ public class TEMPConfirmBox {
     //Create variable
     static boolean answer;
 
+    private static Stage window;
+    private static Label label;
+    private static Button yesButton;
+    private static Button noButton;
+    private static HBox layout = new HBox(10);
+    private static Scene scene;
+
     public static boolean display(String title, String message) {
-        Stage window = new Stage();
+        window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
 
         window.setTitle(title);
         window.setMinWidth(300);
         window.setMinHeight(150);
 
-        Label label = new Label();
+        label = new Label();
         label.setText(message);
 
         //Create exit option buttons
-        Button yesButton = new Button("Yes");
+        yesButton = new Button("Yes");
         yesButton.setMinWidth(20);
-        Button noButton = new Button("No");
+        noButton = new Button("No");
         noButton.setMinWidth(20);
 
         //Clicking will set answer and close window
-        yesButton.setOnAction(e -> {
-            answer = true;
-            window.close();
-        });
-        noButton.setOnAction(e -> {
-            answer = false;
-            window.close();
-        });
+        yesButton.setOnAction(new EventHandler<ActionEvent>(){
+        
+            @Override
+            public void handle(ActionEvent event) {
+                answer = true;
+                window.close();
+            }
+        }); 
 
-        HBox layout = new HBox(10);
+        noButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                answer = false;
+                window.close();
+            }
+        }); 
+
 
         //add and position message
         layout.getChildren().addAll(label, yesButton, noButton);
         layout.setAlignment(Pos.CENTER);
 
-
-
         //instance of scene
-        Scene scene = new Scene(layout);
+        scene = new Scene(layout);
         window.setScene(scene);
         window.showAndWait();
 

@@ -14,29 +14,37 @@ import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 
 public class MainScene extends Scene {
 
+	private SplitPane split;
+	private VBox menuPanel;
+	private Button menuOpt1;
+	private Button menuOpt2;
+	private Button menuOpt3;
+	private Button logout_button;
+	private StackPane right;
+
     public MainScene(double width, double height, MainLogin app) {
        
 		super(new SplitPane(), width, height);
 
 		//creating instance of a 2-split main screen
-		SplitPane split = (SplitPane) this.getRoot();
+		split = (SplitPane) this.getRoot();
 
 
 
 		//creating left menu panel with TBA option buttons and logout button
-		VBox menuPanel = new VBox();
-		Button MenuOpt1 = new Button("Menu Option 1");
-		Button MenuOpt2 = new Button("Menu Option 2");
-		Button MenuOpt3 = new Button("Menu Option 3");
-		Button logout_button = new Button("Logout");
+		menuPanel = new VBox();
+		menuOpt1 = new Button("Menu Option 1");
+		menuOpt2 = new Button("Menu Option 2");
+		menuOpt3 = new Button("Menu Option 3");
+		logout_button = new Button("Logout");
 
 		//setting elements on panel
-		menuPanel.getChildren().addAll(MenuOpt1, MenuOpt2, MenuOpt3, logout_button);
+		menuPanel.getChildren().addAll(menuOpt1, menuOpt2, menuOpt3, logout_button);
 		menuPanel.setSpacing(20);
 		menuPanel.setAlignment(Pos.TOP_CENTER);
 		
 		//creating left panel where main activity will take place
-		StackPane right = new StackPane(new Label("Operation side"));
+		right = new StackPane(new Label("Operation side"));
 
 		
 		//setting and fixing division line between panels (can be flexible)
