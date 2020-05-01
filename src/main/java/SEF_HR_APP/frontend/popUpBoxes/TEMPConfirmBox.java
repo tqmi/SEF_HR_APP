@@ -21,7 +21,12 @@ public class TEMPConfirmBox {
     private static Scene scene;
 
     public static boolean display(String title, String message) {
+
+        if(window != null)
+            window.close();
+
         window = new Stage();
+
         window.initModality(Modality.APPLICATION_MODAL);
 
         window.setTitle(title);
@@ -68,5 +73,11 @@ public class TEMPConfirmBox {
         window.showAndWait();
 
         return answer;
+    }
+
+    public static void closeWindow(){
+        if(window != null)
+            window.close();
+        window = null;
     }
 }

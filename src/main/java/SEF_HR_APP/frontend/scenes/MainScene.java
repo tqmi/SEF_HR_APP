@@ -1,5 +1,6 @@
 package SEF_HR_APP.frontend.scenes;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -42,6 +43,7 @@ public class MainScene extends Scene {
 		menuPanel.getChildren().addAll(menuOpt1, menuOpt2, menuOpt3, logout_button);
 		menuPanel.setSpacing(20);
 		menuPanel.setAlignment(Pos.TOP_CENTER);
+		menuPanel.setPadding(new Insets(25, 0, 0, 0));
 		
 		//creating left panel where main activity will take place
 		right = new StackPane(new Label("Operation side"));
