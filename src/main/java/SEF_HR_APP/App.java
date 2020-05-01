@@ -4,29 +4,12 @@
  */
 package SEF_HR_APP;
 
-import SEF_HR_APP.backend.BackendHandler;
-import SEF_HR_APP.backend.BackendTaskListener;
-import SEF_HR_APP.interfaces.SignalHandler;
-import SEF_HR_APP.interfaces.signals.ApplicationClosingSignal;
 import SEF_HR_APP.frontend.MainLogin;
 
 public class App {
 
     public static void main(String[] args) {
 
-
-        //Setting up taskListener for backend
-        BackendTaskListener backendTaskListener = new BackendTaskListener();
-        BackendHandler.setTaskListener(backendTaskListener);
-
-        //Starting backend thread
-        Thread backendThread = new Thread(backendTaskListener);
-        backendThread.start();
-
-        //Starting frontend
         MainLogin.main(args);
-
-        //Stopping backend Thread if unexpected exit happened from frontend
-        SignalHandler.setSignalBackend(new ApplicationClosingSignal());
     }
 }

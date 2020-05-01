@@ -1,13 +1,12 @@
 package SEF_HR_APP.frontend;
 
+import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 import SEF_HR_APP.frontend.scenes.LoginScene;
-import SEF_HR_APP.interfaces.SignalHandler;
-import SEF_HR_APP.interfaces.signals.ApplicationClosingSignal;
+import SEF_HR_APP.frontend.scenes.MainScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import SEF_HR_APP.frontend.scenes.MainScene;
 
 public class MainLogin extends Application {
 
@@ -20,6 +19,12 @@ public class MainLogin extends Application {
 	private Stage window;
 	private Scene scene;
 
+
+	@Override
+	public void init() throws Exception {
+		ServiceHandler.initialize();
+		super.init();
+	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception 
@@ -50,7 +55,6 @@ public class MainLogin extends Application {
 			i.e. saving on db
 		*/
 		if(answer){
-			SignalHandler.setSignalBackend(new ApplicationClosingSignal());
 			window.close();
 		}
 	}	
