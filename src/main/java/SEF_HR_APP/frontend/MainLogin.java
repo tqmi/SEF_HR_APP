@@ -1,13 +1,14 @@
 package SEF_HR_APP.frontend;
 
-import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBoxExit;
+import SEF_HR_APP.backend.ServiceHandler;
+import SEF_HR_APP.backend.database.DBHandler;
+import SEF_HR_APP.backend.datamodels.user.User;
+import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 import SEF_HR_APP.frontend.scenes.LoginScene;
-import SEF_HR_APP.interfaces.SignalHandler;
-import SEF_HR_APP.interfaces.signals.ApplicationClosingSignal;
+import SEF_HR_APP.frontend.scenes.MainScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import SEF_HR_APP.frontend.scenes.MainScene;
 
 public class MainLogin extends Application {
 
@@ -18,7 +19,15 @@ public class MainLogin extends Application {
 	
 	
 	private Stage window;
+	private Scene scene;
 
+
+	@Override
+	public void init() throws Exception {
+		ServiceHandler.initialize();
+        DBHandler.connectDB();
+		super.init();
+	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception 
@@ -33,30 +42,45 @@ public class MainLogin extends Application {
 		});
 
 		//instance for Login Scene
-		Scene scene = new LoginScene(500, 350, this);
+		scene = new LoginScene(500, 350, this);
 		
 		window.setScene(scene);
 		window.show();
+	}
+	
+	@Override
+	public void stop() throws Exception {
+		DBHandler.close();
+		super.stop();
 	}
 
 	private void closeProgram()
 	{
 
-		Boolean answer = TEMPConfirmBoxExit.display("Close program alert", "Are you sure you want to exit?");
+		Boolean answer = TEMPConfirmBox.display("Close program alert", "Are you sure you want to exit?");
 		/*
 			code to be parsed after user 
 			sends command for closing program
 			i.e. saving on db
 		*/
 		if(answer){
-			SignalHandler.setSignalBackend(new ApplicationClosingSignal());
 			window.close();
 		}
 	}	
 
-	//implement transition to empty scene
+	//implement transition to main scene
 	public void transToMainScene(){
 		Scene scene = new MainScene(500, 350, this);
+		window.setTitle("HRSolution");
+		window.setScene(scene);
+		window.show();
+	}
+
+	//implement transition to login scene
+	public void transToLoginScene(){
+		User.resetCurrentUser();
+		Scene scene = new LoginScene(500, 350, this);
+		window.setTitle("SHA Login");
 		window.setScene(scene);
 		window.show();
 	}
