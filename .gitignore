@@ -5,3 +5,9 @@
 build
 
 bin
+
+db
+
+.settings
+
+.vscode

@@ -1,6 +1,8 @@
 package SEF_HR_APP.frontend;
 
 import SEF_HR_APP.backend.ServiceHandler;
+import SEF_HR_APP.backend.database.DBHandler;
+import SEF_HR_APP.backend.datamodels.user.User;
 import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 import SEF_HR_APP.frontend.scenes.LoginScene;
 import SEF_HR_APP.frontend.scenes.MainScene;
@@ -23,6 +25,7 @@ public class MainLogin extends Application {
 	@Override
 	public void init() throws Exception {
 		ServiceHandler.initialize();
+        DBHandler.connectDB();
 		super.init();
 	}
 
@@ -43,6 +46,12 @@ public class MainLogin extends Application {
 		
 		window.setScene(scene);
 		window.show();
+	}
+	
+	@Override
+	public void stop() throws Exception {
+		DBHandler.close();
+		super.stop();
 	}
 
 	private void closeProgram()
@@ -69,6 +78,7 @@ public class MainLogin extends Application {
 
 	//implement transition to login scene
 	public void transToLoginScene(){
+		User.resetCurrentUser();
 		Scene scene = new LoginScene(500, 350, this);
 		window.setTitle("SHA Login");
 		window.setScene(scene);

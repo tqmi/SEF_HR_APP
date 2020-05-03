@@ -64,9 +64,10 @@ public class MainScene extends Scene {
             
             public void handle(MouseEvent e){
 				
-					if(TEMPConfirmBox.display("Log Out Alert", "Are you sure you want to logout?"))
-						app.transToLoginScene();
-            }
+				if(TEMPConfirmBox.display("Log Out Alert", "Are you sure you want to logout?"))
+					app.transToLoginScene();
+			
+			}
 
 		});
 

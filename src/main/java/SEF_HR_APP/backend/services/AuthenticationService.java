@@ -3,7 +3,6 @@ package SEF_HR_APP.backend.services;
 import SEF_HR_APP.backend.ServiceTemplate;
 import SEF_HR_APP.backend.tasks.AuthenticationTask;
 import SEF_HR_APP.interfaces.LoginInfo;
-import javafx.concurrent.Task;
 
 public class AuthenticationService extends ServiceTemplate<LoginInfo,Boolean> {
 
@@ -13,7 +12,7 @@ public class AuthenticationService extends ServiceTemplate<LoginInfo,Boolean> {
     }
 
     @Override
-    protected Task createTask() {
+    protected AuthenticationTask createTask() {
 
         return new AuthenticationTask(info);
     }

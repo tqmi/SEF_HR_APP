@@ -1,5 +1,7 @@
 package SEF_HR_APP.backend.tasks;
 
+import SEF_HR_APP.backend.database.DBHandler;
+import SEF_HR_APP.backend.datamodels.user.User;
 import SEF_HR_APP.interfaces.LoginInfo;
 import javafx.concurrent.Task;
 
@@ -9,14 +11,16 @@ public class AuthenticationTask extends Task<Boolean> {
 
     public AuthenticationTask(LoginInfo info){
         this.info = info;
-
     }
 
     public boolean authenticate(){
 
-        if(info.getUsername().equals("admin") && info.getPassword().equals("admin"))
-            return true;
+        User logincred = DBHandler.findUser(info.getUsername(), info.getPassword());
 
+        if(logincred != null){
+            logincred.setCurrentUser();
+            return true;
+        }
         return false;
     }
 
