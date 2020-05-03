@@ -8,7 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
 
-public class TEMPAlertBoxLogIn {
+public class AlertBoxLogIn {
 
     private static Stage window;
     private static Scene scene;
@@ -31,7 +31,7 @@ public class TEMPAlertBoxLogIn {
 
         label = new Label();
         label.setText(message);
-        closeButton = new Button("Close Pop-up window");
+        closeButton = new Button("Close");
         
         closeButton.setOnAction(new EventHandler<ActionEvent>(){
         

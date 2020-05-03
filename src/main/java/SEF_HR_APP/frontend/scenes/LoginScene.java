@@ -3,7 +3,7 @@ package SEF_HR_APP.frontend.scenes;
 import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.backend.ServiceHandler.ServiceID;
 import SEF_HR_APP.frontend.MainLogin;
-import SEF_HR_APP.frontend.popUpBoxes.TEMPAlertBoxLogIn;
+import SEF_HR_APP.frontend.popUpBoxes.AlertBoxLogIn;
 import SEF_HR_APP.interfaces.LoginInfo;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -93,7 +93,7 @@ public class LoginScene extends Scene {
 			ServiceHandler.setValues(ServiceID.AUTHENTICATIONSERVICE, new LoginInfo(userBox.getText(), passBox.getText()));
 			ServiceHandler.startService(ServiceID.AUTHENTICATIONSERVICE);
 
-			TEMPAlertBoxLogIn.display("Log In Alert", "Authenticating");
+			AlertBoxLogIn.display("Log In Alert", "Authenticating...");
 
 		}
 		
@@ -106,11 +106,11 @@ public class LoginScene extends Scene {
 		@Override
 			public void handle(Event event) {
 				if((boolean) ServiceHandler.getValues(ServiceID.AUTHENTICATIONSERVICE)) {
-					TEMPAlertBoxLogIn.closeWindow();
+					AlertBoxLogIn.closeWindow();
 					app.transToMainScene();
 				}
 				else{
-					TEMPAlertBoxLogIn.display("Log In Alert", "Failed Login");
+					AlertBoxLogIn.display("Log In Alert", "Failed Login!");
 				}
 			}
 
