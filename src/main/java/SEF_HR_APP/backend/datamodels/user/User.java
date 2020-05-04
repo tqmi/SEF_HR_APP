@@ -108,6 +108,20 @@ public class User implements DBEntry{
         this.password = password;
     }
 
+      /** 
+     * @return accountType
+    */
+    public AccountType getaccountType() {
+        return accountType;
+    }
+
+    /**
+     * @param accountType
+     */
+    public void setaccountType() {
+        this.accountType = accountType;
+    }
+    
     
     
 
