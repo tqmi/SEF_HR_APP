@@ -1,5 +1,6 @@
 package SEF_HR_APP.frontend.scenes;
 
+import SEF_HR_APP.backend.datamodels.user.User;
 import SEF_HR_APP.frontend.MainLogin;
 import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 import javafx.event.EventHandler;
@@ -7,11 +8,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class MainScene extends Scene {

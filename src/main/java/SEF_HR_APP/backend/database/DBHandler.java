@@ -167,7 +167,7 @@ public class DBHandler {
         }
     }
     
-    public synchronized static void insertUserIntoTable(User newUser){
+    public synchronized static boolean insertUserIntoTable(User newUser){
         try {
             stmt = connection.createStatement();
             String[] fieldNames = newUser.getFieldsName();
@@ -184,10 +184,11 @@ public class DBHandler {
             sql.append(fields[fields.length - 1] + ")");
             System.out.println(sql.toString());
             stmt.executeUpdate(sql.toString());
+            return true;
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            ;
+            return false;
         }
 
     }
