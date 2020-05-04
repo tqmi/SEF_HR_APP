@@ -1,6 +1,7 @@
 package SEF_HR_APP.backend.datamodels.user;
 
 import SEF_HR_APP.backend.database.DBEntry;
+import SEF_HR_APP.backend.security.Hasher;
 
 public class User implements DBEntry{
 
@@ -30,11 +31,9 @@ public class User implements DBEntry{
      * @param salary
      * @param leaveDays
      * @param accountType
-     * @param username
-     * @param password
      */
     public User(String name, Position position, String email, Seniority seniority, double salary, int leaveDays,
-            AccountType accountType, String username, String password) {
+            AccountType accountType) {
         this.name = name;
         this.position = position;
         this.email = email;
@@ -42,10 +41,11 @@ public class User implements DBEntry{
         this.salary = salary;
         this.leaveDays = leaveDays;
         this.accountType = accountType;
-        this.username = username;
-        this.password = password;
         fieldValues = new String[9];
-            
+        setFieldValues();
+    }
+
+    private void setFieldValues(){
         fieldValues[0] = "'" + name + "'";
         fieldValues[1] = "'" + position.getStringRepresentation() + "'";
         fieldValues[2] = "'"+email+"'";
@@ -53,8 +53,8 @@ public class User implements DBEntry{
         fieldValues[4] = String.valueOf(salary);
         fieldValues[5] = String.valueOf(leaveDays);
         fieldValues[6] = "'"+accountType.getStringRepresentation()+"'";
-        fieldValues[7] = "'"+username+"'";
-        fieldValues[8] = "'"+password+"'";
+        
+        
     }
 
     public User(){
@@ -99,13 +99,20 @@ public class User implements DBEntry{
      */
     public void setUsername(String username) {
         this.username = username;
+        fieldValues[7] = "'"+username+"'";
     }
 
     /**
      * @param password the password to set
      */
     public void setPassword(String password) {
+        this.password = Hasher.getSHA256(username+password);
+        fieldValues[8] = "'"+this.password+"'";
+    }
+
+    public void setPasswordSHA(String password){
         this.password = password;
+        fieldValues[8] = "'"+password+"'";    
     }
 
     

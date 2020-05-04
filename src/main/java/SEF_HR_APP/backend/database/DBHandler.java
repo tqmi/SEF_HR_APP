@@ -59,8 +59,9 @@ public class DBHandler {
 
         try {
             stmt = connection.createStatement();
-            User admin = new User("admin", Position.ADMIN, "admin", Seniority.JUNIOR, 0, 0, AccountType.ADMIN, adminusername,
-                    adminpassword);
+            User admin = new User("admin", Position.ADMIN, "admin", Seniority.JUNIOR, 0, 0, AccountType.ADMIN);
+            admin.setUsername(adminusername);
+            admin.setPassword(adminpassword);
             String[] fieldNames = admin.getFieldsName();
             StringBuilder sql = new StringBuilder("INSERT INTO Users (");
 
@@ -152,9 +153,9 @@ public class DBHandler {
                                         Seniority.valueOf(rs.getString(fieldNames[3])),
                                         rs.getDouble(fieldNames[4]),
                                         rs.getInt(fieldNames[5]),
-                                        AccountType.valueOf(rs.getString(fieldNames[6])),
-                                        rs.getString(fieldNames[7]),
-                                        rs.getString(fieldNames[8]));
+                                        AccountType.valueOf(rs.getString(fieldNames[6])));
+                    findUser.setUsername(rs.getString(fieldNames[7]));
+                    findUser.setPasswordSHA(rs.getString(fieldNames[8]));
                     return findUser;
                 }
             }

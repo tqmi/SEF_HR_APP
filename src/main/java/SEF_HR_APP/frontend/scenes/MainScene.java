@@ -1,17 +1,17 @@
 package SEF_HR_APP.frontend.scenes;
 
+import SEF_HR_APP.frontend.MainLogin;
+import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
-import SEF_HR_APP.frontend.MainLogin;
-import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 
 public class MainScene extends Scene {
 

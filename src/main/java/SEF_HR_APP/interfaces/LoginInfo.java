@@ -1,5 +1,7 @@
 package SEF_HR_APP.interfaces;
 
+import SEF_HR_APP.backend.security.Hasher;
+
 public class LoginInfo {
 
     
@@ -40,8 +42,9 @@ public class LoginInfo {
      * @param password
      */
     public LoginInfo(String username, String password) {
+
         this.username = username;
-        this.password = password;
+        this.password = Hasher.getSHA256(username+password);
     }
 
     
