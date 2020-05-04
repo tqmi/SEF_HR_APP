@@ -4,10 +4,12 @@
 # Ignore Gradle build output directory
 build
 
-bin
+bin/*
 
 db
 
 .settings
 
 .vscode
+
+derby.log

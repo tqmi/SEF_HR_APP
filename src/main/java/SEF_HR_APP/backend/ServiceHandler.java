@@ -3,6 +3,7 @@ package SEF_HR_APP.backend;
 import java.util.ArrayList;
 
 import SEF_HR_APP.backend.services.AuthenticationService;
+import SEF_HR_APP.backend.services.CreateAccountService;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
@@ -13,11 +14,13 @@ public class ServiceHandler {
     public static void initialize(){
         services = new ArrayList<>();
         services.add(new AuthenticationService());
+        services.add(new CreateAccountService());
     }
 
     
     public enum ServiceID{
-        AUTHENTICATIONSERVICE(0);
+        AUTHENTICATIONSERVICE(0),
+        CREATEACCOUNTSERVICE(1);
 
         private int index;
 

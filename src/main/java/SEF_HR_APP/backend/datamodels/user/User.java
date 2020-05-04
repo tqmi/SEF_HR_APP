@@ -17,7 +17,7 @@ public class User implements DBEntry{
     private String password;
     private static final String[] fieldNames = {"name","position","email","seniority","salary","leaveDays","accountType","username","password"};
     private String[] fieldValues;
-    private static final String[] fieldType = {"VARCHAR(255)","VARCHAR(255)","VARCHAR(255)","VARCHAR(255)","DECIMAL(10,3)","INTEGER","VARCHAR(255)","VARCHAR(255)","VARCHAR(255)"};
+    private static final String[] fieldType = {"VARCHAR(255)","VARCHAR(255)","VARCHAR(255)","VARCHAR(255)","DECIMAL(10,3)","INTEGER","VARCHAR(255)","VARCHAR(255) UNIQUE","VARCHAR(255)"};
 
 
     
@@ -86,6 +86,29 @@ public class User implements DBEntry{
     public static User getCurrentUser(){
         return currentUser;
     }
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    
     
 
 }

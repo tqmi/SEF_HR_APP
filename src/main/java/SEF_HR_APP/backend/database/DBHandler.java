@@ -61,12 +61,19 @@ public class DBHandler {
             stmt = connection.createStatement();
             User admin = new User("admin", Position.ADMIN, "admin", Seniority.JUNIOR, 0, 0, AccountType.ADMIN, adminusername,
                     adminpassword);
-            StringBuilder sql = new StringBuilder("INSERT INTO Users VALUES (1,");
+            String[] fieldNames = admin.getFieldsName();
+            StringBuilder sql = new StringBuilder("INSERT INTO Users (");
+
+            for(int i = 0 ;i < fieldNames.length -1 ; i++){
+                sql.append(fieldNames[i] + ",");
+            }
+            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
             String[] fields = admin.getFieldsData();
             for (int i = 0; i < fields.length - 1; i++) {
                 sql.append(fields[i] + ",");
             }
             sql.append(fields[fields.length - 1] + ")");
+            System.out.println(sql.toString());
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -104,15 +111,15 @@ public class DBHandler {
         try {
             stmt = connection.createStatement();
         
-        StringBuilder sql = new StringBuilder( "CREATE TABLE Users (\nid INTEGER not NULL,\n");
+        StringBuilder sql = new StringBuilder( "CREATE TABLE Users (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)\n");
         User dummy = new User();
         String[] fieldTypes = dummy.getFieldsType();
         String[] fieldNames = dummy.getFieldsName();
 
         for(int i = 0 ; i < fieldNames.length ; i++){
-            sql.append(fieldNames[i] + " " + fieldTypes[i] +",\n");
+            sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
         }
-        sql.append(" PRIMARY KEY ( id ))"); 
+        sql.append(")"); 
 
         System.out.println(sql.toString());
         stmt.executeUpdate(sql.toString());
@@ -159,7 +166,32 @@ public class DBHandler {
         }
     }
     
-    public  synchronized static void close(){
+    public synchronized static void insertUserIntoTable(User newUser){
+        try {
+            stmt = connection.createStatement();
+            String[] fieldNames = newUser.getFieldsName();
+            StringBuilder sql = new StringBuilder("INSERT INTO Users (");
+
+            for(int i = 0 ;i < fieldNames.length -1 ; i++){
+                sql.append(fieldNames[i] + ",");
+            }
+            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
+            String[] fields = newUser.getFieldsData();
+            for (int i = 0; i < fields.length - 1; i++) {
+                sql.append(fields[i] + ",");
+            }
+            sql.append(fields[fields.length - 1] + ")");
+            System.out.println(sql.toString());
+            stmt.executeUpdate(sql.toString());
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            ;
+        }
+
+    }
+
+    public synchronized static void close(){
         try{
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
         }catch(SQLException ex){
