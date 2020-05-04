@@ -115,6 +115,20 @@ public class User implements DBEntry{
         fieldValues[8] = "'"+password+"'";    
     }
 
+      /** 
+     * @return accountType
+    */
+    public AccountType getaccountType() {
+        return accountType;
+    }
+
+    /**
+     * @param accountType
+     */
+    public void setaccountType() {
+        this.accountType = accountType;
+    }
+    
     
     
 
