@@ -1,5 +1,6 @@
 package SEF_HR_APP.frontend.scenes;
 
+import SEF_HR_APP.backend.datamodels.user.User;
 import SEF_HR_APP.frontend.MainLogin;
 import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 import javafx.event.EventHandler;
@@ -11,8 +12,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Window;
 
 public class MainScene extends Scene {
 
@@ -90,6 +93,8 @@ public class MainScene extends Scene {
 		//creating right panel where main activity will take place
 		right = new GridPane();
 
+		menuOpt1.setOnMouseClicked(new createAccHandler());
+
 		
 		//setting and fixing division line between panels (can be flexible)
 		split.setDividerPositions(0.25);
@@ -121,6 +126,15 @@ public class MainScene extends Scene {
 		}
 	}
 
+	private class createAccHandler implements EventHandler<MouseEvent> {
 
+		@Override
+		public void handle(MouseEvent e)
+		{
+			split.getItems().remove(right);
+			right = new CreateAccountScene();
+			split.getItems().add(right);
+		}
+	}
 
 }
