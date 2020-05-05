@@ -128,8 +128,12 @@ public class User implements DBEntry{
     public void setaccountType() {
         this.accountType = accountType;
     }
-    
-    
-    
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
 }
