@@ -193,6 +193,23 @@ public class DBHandler {
 
     }
 
+    public synchronized static boolean isUsernameUsed(String username){
+
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM Users WHERE username='"+username+"'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next())
+                return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return true;
+        }
+
+        return false;
+    }
+
     public synchronized static void close(){
         try{
             DriverManager.getConnection("jdbc:derby:;shutdown=true");

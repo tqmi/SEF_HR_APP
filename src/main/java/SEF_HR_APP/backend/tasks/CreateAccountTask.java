@@ -28,6 +28,12 @@ public class CreateAccountTask extends Task<Boolean> {
 
         username = name.substring(0,6).toLowerCase();
 
+        int i=1;
+        while(DBHandler.isUsernameUsed(username+i))
+            i++;
+
+        username = username + i;
+
         PasswordGenerator generator = new PasswordGenerator.PasswordGeneratorBuilder()
                                                             .useDigits(true)
                                                             .useLower(true)
