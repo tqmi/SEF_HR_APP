@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -33,6 +34,7 @@ public class MainScene extends Scene {
 	private GridPane right;
 	private MainLogin app;
 
+
     public MainScene(double width, double height, MainLogin app) {
        
 		super(new SplitPane(), width, height);
@@ -41,9 +43,8 @@ public class MainScene extends Scene {
 		//creating instance of a 2-split main screen
 		split = (SplitPane) this.getRoot();
 
-		//creating left menu panel with TBA option buttons and logout button
+		//creating left menu panel with option buttons and logout button
 		menuPanel = new VBox();
-		//menuPanel.setBackground();
 
 		menuOpt1 = new Button("Create Account");  //admin, operator  
 		menuOpt2 = new Button("Delete Account");  //admin, operator
@@ -87,17 +88,19 @@ public class MainScene extends Scene {
 		menuPanel.setSpacing(20);
 		menuPanel.setAlignment(Pos.TOP_CENTER);
 		menuPanel.setPadding(new Insets(25, 0, 0, 0));
+
 		
 		//creating right panel where main activity will take place
 		right = new GridPane();
 
 		menuOpt1.setOnMouseClicked(new createAccHandler());
 
-		
+
 		//setting and fixing division line between panels (can be flexible)
 		split.setDividerPositions(0.25);
 		menuPanel.maxWidthProperty().bind(split.widthProperty().multiply(0.25));
 
+		
 		split.getItems().addAll(menuPanel, right);
 
 

@@ -10,11 +10,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import java.util.Arrays;
 import SEF_HR_APP.backend.datamodels.user.Position;
 import SEF_HR_APP.backend.datamodels.user.Seniority;
+import SEF_HR_APP.backend.datamodels.user.User;
+import SEF_HR_APP.backend.ServiceHandler;
+import SEF_HR_APP.backend.ServiceHandler.ServiceID;
 import SEF_HR_APP.backend.datamodels.user.AccountType;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CreateAccountScene extends GridPane {
 
@@ -54,7 +60,8 @@ public class CreateAccountScene extends GridPane {
 		this.setPadding(new Insets(25, 25, 25, 25));
 
         //simple Title label & pos
-		scenetitle = new Text("Please fill in the following form.");
+        scenetitle = new Text("Please fill in the following form.");
+        scenetitle.setFont(Font.font("Verdana"));
         this.add(scenetitle, 0, 0, 2, 1);
         
         //full name 
@@ -106,7 +113,7 @@ public class CreateAccountScene extends GridPane {
         create_button = new Button("Create");
         this.add(create_button, 0, 8);
 
-
+        //call for EventHandler for data validation and account creation 
         create_button.setOnMouseClicked(new testAlertforCreateAccount());
 
     }
@@ -116,7 +123,27 @@ public class CreateAccountScene extends GridPane {
         @Override
         public void handle(Event e)
         {
-            AlertBoxLogIn.display("Account Creation Alert", "Create option accessed");
+            //regex implementation for checking valid email format
+            String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+			Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(emailbox.getText()); 
+            
+            //explicit condition for checking if all fields are filled
+            //then if email format true -> action
+            if(namebox.getText().trim().isEmpty() || posbox.getSelectionModel().isEmpty() || emailbox.getText().trim().isEmpty() || senbox.getSelectionModel().isEmpty() || salarybox.getText().trim().isEmpty() || leaveDaysbox.getText().trim().isEmpty() || accTypebox.getSelectionModel().isEmpty())
+                AlertBoxLogIn.display("Alert", "All forms are mandatory to fill");
+            else if(matcher.matches())
+                {
+                    ServiceHandler.setValues(ServiceID.CREATEACCOUNTSERVICE, new User(namebox.getText(), (Position) posbox.getSelectionModel().getSelectedItem(), emailbox.getText(), (Seniority) senbox.getSelectionModel().getSelectedItem(), Double.valueOf(salarybox.getText()), Integer.valueOf(leaveDaysbox.getText()), (AccountType) accTypebox.getSelectionModel().getSelectedItem()));
+                    ServiceHandler.startService(ServiceID.CREATEACCOUNTSERVICE);
+                    AlertBoxLogIn.display("Account Alert", "Account successfully created!");
+                }
+                else
+                    AlertBoxLogIn.display("Alert", "Invalid email format");
+
+            /**
+             * must decide on AlertBox usage
+             */
         }
     }
     
