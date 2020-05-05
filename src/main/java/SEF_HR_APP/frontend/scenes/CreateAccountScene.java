@@ -11,6 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import java.util.Arrays;
+import SEF_HR_APP.backend.datamodels.user.Position;
+import SEF_HR_APP.backend.datamodels.user.Seniority;
+import SEF_HR_APP.backend.datamodels.user.AccountType;
 
 public class CreateAccountScene extends GridPane {
 
@@ -63,7 +67,7 @@ public class CreateAccountScene extends GridPane {
         position = new Label("Choose employee position:");
         this.add(position, 0, 2);
         posbox = new ComboBox();
-        posbox.getItems().addAll("Option 1", "Option 2", "Option 3");
+        posbox.getItems().addAll(Arrays.asList(Position.values()));
         this.add(posbox, 1, 2);
 
         //work email
@@ -76,7 +80,7 @@ public class CreateAccountScene extends GridPane {
         seniority = new Label("Choose employee seniority:");
         this.add(seniority, 0, 4);
         senbox = new ComboBox();
-        senbox.getItems().addAll("Option 1", "Option 2", "Option 3");
+        senbox.getItems().addAll(Arrays.asList(Seniority.values()));
         this.add(senbox, 1, 4);
 
         //base salary
@@ -95,12 +99,13 @@ public class CreateAccountScene extends GridPane {
         accType = new Label("Choose account type:");
         this.add(accType, 0, 7);
         accTypebox = new ComboBox();
-        accTypebox.getItems().addAll("Option 1", "Option 2", "Option 3");
+        accTypebox.getItems().addAll(Arrays.asList(AccountType.values()));
         this.add(accTypebox, 1, 7);
 
         //validate entries and create account
         create_button = new Button("Create");
         this.add(create_button, 0, 8);
+
 
         create_button.setOnMouseClicked(new testAlertforCreateAccount());
 
