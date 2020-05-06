@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 import java.util.Arrays;
 import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.backend.ServiceHandler.ServiceID;
+import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import SEF_HR_APP.backend.datamodels.user.AccountType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,6 +76,7 @@ public class AddPayOptionScene extends GridPane {
 
         //call for EventHandler for data validation and account creation 
         add_button.setOnMouseClicked(new AddPayOptionHandler());
+        ServiceHandler.setOnSucceededHandler(ServiceID.CREATEPAYOPTIONSERVICE, new PayOptionAddedSuccessfullyHandler() );
 
 
     }
@@ -87,7 +89,25 @@ public class AddPayOptionScene extends GridPane {
             if(namebox.getText().trim().isEmpty() || perbox.getText().trim().isEmpty() || legbox.getText().trim().isEmpty())
                 AlertBoxLogIn.display("Alert", "All forms are mandatory to fill");
             else
-                AlertBoxLogIn.display("Alert", "Add pay option process accessed");
+            {
+                ServiceHandler.setValues(ServiceID.CREATEPAYOPTIONSERVICE, new PayOption(namebox.getText(), Double.valueOf(perbox.getText()), legbox.getText()));
+                ServiceHandler.startService(ServiceID.CREATEPAYOPTIONSERVICE);
+                AlertBoxLogIn.display("Alert", "Working...");
+            }
+        }
+    }
+
+    private class PayOptionAddedSuccessfullyHandler implements EventHandler<Event> {
+
+        @Override
+        public void handle(Event e)
+        {
+            if((boolean) ServiceHandler.getValues(ServiceID.CREATEPAYOPTIONSERVICE)){
+                AlertBoxLogIn.display("Alert", "Pay option successfully added!");
+            }
+            else{
+                AlertBoxLogIn.display("Alert", "Pay option creation failed!");
+            }
         }
     }
     
