@@ -3,6 +3,7 @@ package SEF_HR_APP.frontend;
 import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.backend.database.DBHandler;
 import SEF_HR_APP.backend.datamodels.user.User;
+import SEF_HR_APP.backend.mail.MailService;
 import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 import SEF_HR_APP.frontend.scenes.LoginScene;
 import SEF_HR_APP.frontend.scenes.MainScene;
@@ -25,6 +26,7 @@ public class MainLogin extends Application {
 	public void init() throws Exception {
 		ServiceHandler.initialize();
 		DBHandler.connectDB();
+		MailService.initialize();
 		super.init();
 	}
 

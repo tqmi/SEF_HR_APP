@@ -2,6 +2,7 @@ package SEF_HR_APP.backend.tasks;
 
 import SEF_HR_APP.backend.database.DBHandler;
 import SEF_HR_APP.backend.datamodels.user.User;
+import SEF_HR_APP.backend.mail.MailService;
 import SEF_HR_APP.backend.security.PasswordGenerator;
 import javafx.concurrent.Task;
 
@@ -50,7 +51,7 @@ public class CreateAccountTask extends Task<Boolean> {
 
     private boolean sendEmail() {
         System.out.println(username + " " + password);
-        return true;
+        return MailService.sendNewUserMessage(newUser, password);
     }
 
     private boolean storeUser() {
