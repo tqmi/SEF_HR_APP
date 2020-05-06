@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
+import SEF_HR_APP.backend.datamodels.activity.ActivityPayOptionLink;
 import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import SEF_HR_APP.backend.datamodels.user.AccountType;
 import SEF_HR_APP.backend.datamodels.user.Position;
@@ -52,9 +54,17 @@ public class DBHandler {
         createUserTable();
         System.out.println("User table added! Adding Pay Option table ...");
         createPayOptionTable();
-        System.out.println("Pay Option table added! Adding admin account ...");
+        System.out.println("Pay Option table added! Adding Activity table ...");
+        createActivityInformationTable();
+        System.out.println("Activity table added! Adding Link ...");
+        createLinkTable();
+        System.out.println("Link table added! Adding admin account ...");
         addAdminAccountToTable();
     }
+
+   
+
+    
 
     private synchronized static void addAdminAccountToTable() {
 
@@ -115,7 +125,7 @@ public class DBHandler {
         try {
             stmt = connection.createStatement();
             
-            StringBuilder sql = new StringBuilder( "CREATE TABLE Users (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)\n");
+            StringBuilder sql = new StringBuilder( "CREATE TABLE Users (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
             User dummy = new User();
             String[] fieldTypes = dummy.getFieldsType();
             String[] fieldNames = dummy.getFieldsName();
@@ -136,8 +146,50 @@ public class DBHandler {
         try {
             stmt = connection.createStatement();
             
-            StringBuilder sql = new StringBuilder( "CREATE TABLE PayOptions (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)\n");
+            StringBuilder sql = new StringBuilder( "CREATE TABLE PayOptions (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
             PayOption dummy = new PayOption();
+            String[] fieldTypes = dummy.getFieldsType();
+            String[] fieldNames = dummy.getFieldsName();
+
+            for(int i = 0 ; i < fieldNames.length ; i++){
+                sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
+            }
+            sql.append(")"); 
+
+            System.out.println(sql.toString());
+            stmt.executeUpdate(sql.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void createActivityInformationTable() {
+        try {
+            stmt = connection.createStatement();
+            
+            StringBuilder sql = new StringBuilder( "CREATE TABLE Activities (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
+            ActivityInformation dummy = new ActivityInformation();
+            String[] fieldTypes = dummy.getFieldsType();
+            String[] fieldNames = dummy.getFieldsName();
+
+            for(int i = 0 ; i < fieldNames.length ; i++){
+                sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
+            }
+            sql.append(")"); 
+
+            System.out.println(sql.toString());
+            stmt.executeUpdate(sql.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void createLinkTable() {
+        try {
+            stmt = connection.createStatement();
+            
+            StringBuilder sql = new StringBuilder( "CREATE TABLE ActToPay (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
+            ActivityPayOptionLink dummy = new ActivityPayOptionLink();
             String[] fieldTypes = dummy.getFieldsType();
             String[] fieldNames = dummy.getFieldsName();
 
