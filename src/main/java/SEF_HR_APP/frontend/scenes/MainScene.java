@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -32,6 +33,7 @@ public class MainScene extends Scene {
 	private Button menuOpt10;
 	private Button logout_button;
 	private GridPane right;
+	private ScrollPane scroll;
 	private MainLogin app;
 
 
@@ -44,6 +46,7 @@ public class MainScene extends Scene {
 		split = (SplitPane) this.getRoot();
 
 		//creating left menu panel with option buttons and logout button
+		scroll = new ScrollPane();
 		menuPanel = new VBox();
 
 		menuOpt1 = new Button("Create Account");  //admin, operator  
@@ -94,16 +97,22 @@ public class MainScene extends Scene {
 		right = new GridPane();
 
 		menuOpt1.setOnMouseClicked(new createAccHandler());
+		menuOpt4.setOnMouseClicked(new addPayOptionHandler());
 
 
 		//setting and fixing division line between panels (can be flexible)
 		split.setDividerPositions(0.25);
 		menuPanel.maxWidthProperty().bind(split.widthProperty().multiply(0.25));
 
+		//setting Scrolling properties to encapsulate menuPanel
+		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
+		scroll.maxWidth(100);
+		scroll.setContent(menuPanel);
 		
-		split.getItems().addAll(menuPanel, right);
 
+		split.getItems().addAll(scroll, right);
 
+		
 		//call for Event Handler to begin logout process
 		logout_button.setOnMouseClicked(new logoutHandler());
 		
@@ -134,6 +143,17 @@ public class MainScene extends Scene {
 		{
 			split.getItems().remove(right);
 			right = new CreateAccountScene();
+			split.getItems().add(right);
+		}
+	}
+
+	private class addPayOptionHandler implements EventHandler<MouseEvent> {
+
+		@Override
+		public void handle(MouseEvent e)
+		{
+			split.getItems().remove(right);
+			right = new AddPayOptionScene();
 			split.getItems().add(right);
 		}
 	}
