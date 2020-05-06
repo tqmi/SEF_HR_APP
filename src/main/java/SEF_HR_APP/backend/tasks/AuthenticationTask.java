@@ -10,6 +10,7 @@ public class AuthenticationTask extends Task<Boolean> {
     private LoginInfo info;
 
     public AuthenticationTask(LoginInfo info){
+        super();
         this.info = info;
     }
 

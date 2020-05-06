@@ -13,6 +13,7 @@ public class CreateAccountTask extends Task<Boolean> {
     private String username;
 
     public CreateAccountTask(User user){
+        super();
         newUser = user;
     }
 

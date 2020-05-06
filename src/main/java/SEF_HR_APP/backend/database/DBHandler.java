@@ -216,6 +216,33 @@ public class DBHandler {
 
     }
 
+    public synchronized static boolean insertPayOptionIntoTable(PayOption newPayOption){
+        try {
+            stmt = connection.createStatement();
+            String[] fieldNames = newPayOption.getFieldsName();
+            StringBuilder sql = new StringBuilder("INSERT INTO PayOptions (");
+
+            for(int i = 0 ;i < fieldNames.length -1 ; i++){
+                sql.append(fieldNames[i] + ",");
+            }
+            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
+            String[] fields = newPayOption.getFieldsData();
+            for (int i = 0; i < fields.length - 1; i++) {
+                sql.append(fields[i] + ",");
+            }
+            sql.append(fields[fields.length - 1] + ")");
+            System.out.println(sql.toString());
+            stmt.executeUpdate(sql.toString());
+            return true;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+
     public synchronized static boolean isUsernameUsed(String username){
 
         try {
