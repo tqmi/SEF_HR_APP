@@ -114,11 +114,13 @@ public class CreateAccountScene extends GridPane {
         this.add(create_button, 0, 8);
 
         //call for EventHandler for data validation and account creation 
-        create_button.setOnMouseClicked(new testAlertforCreateAccount());
+        create_button.setOnMouseClicked(new CreateAccountHandler());
+        ServiceHandler.setOnSucceededHandler(ServiceID.CREATEACCOUNTSERVICE, new AccountCreatedSuccessfullyHandler() );
+
 
     }
 
-    private class testAlertforCreateAccount implements EventHandler<Event> {
+    private class CreateAccountHandler implements EventHandler<Event> {
 
         @Override
         public void handle(Event e)
@@ -127,23 +129,35 @@ public class CreateAccountScene extends GridPane {
             String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
 			Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(emailbox.getText()); 
+
+            //regex for numeric fields
+            Pattern numericPattern = Pattern.compile("\\d+(\\.\\d+)?");
             
-            //explicit condition for checking if all fields are filled
+            //explicit condition for checking if all fields are filled, numeric fields are numeric
             //then if email format true -> action
-            if(namebox.getText().trim().isEmpty() || posbox.getSelectionModel().isEmpty() || emailbox.getText().trim().isEmpty() || senbox.getSelectionModel().isEmpty() || salarybox.getText().trim().isEmpty() || leaveDaysbox.getText().trim().isEmpty() || accTypebox.getSelectionModel().isEmpty())
+            if(namebox.getText().trim().isEmpty() || posbox.getSelectionModel().isEmpty() || emailbox.getText().trim().isEmpty() || senbox.getSelectionModel().isEmpty() || salarybox.getText().trim().isEmpty() || !numericPattern.matcher(salarybox.getText().trim()).matches() || leaveDaysbox.getText().trim().isEmpty() || !numericPattern.matcher(leaveDaysbox.getText().trim()).matches() || accTypebox.getSelectionModel().isEmpty())
                 AlertBoxLogIn.display("Alert", "All forms are mandatory to fill");
-            else if(matcher.matches())
-                {
+            else if(matcher.matches()){
                     ServiceHandler.setValues(ServiceID.CREATEACCOUNTSERVICE, new User(namebox.getText(), (Position) posbox.getSelectionModel().getSelectedItem(), emailbox.getText(), (Seniority) senbox.getSelectionModel().getSelectedItem(), Double.valueOf(salarybox.getText()), Integer.valueOf(leaveDaysbox.getText()), (AccountType) accTypebox.getSelectionModel().getSelectedItem()));
                     ServiceHandler.startService(ServiceID.CREATEACCOUNTSERVICE);
-                    AlertBoxLogIn.display("Account Alert", "Account successfully created!");
+                    AlertBoxLogIn.display("Account Alert", "Working...");
                 }
                 else
                     AlertBoxLogIn.display("Alert", "Invalid email format");
+        }
+    }
 
-            /**
-             * must decide on AlertBox usage
-             */
+    private class AccountCreatedSuccessfullyHandler implements EventHandler<Event> {
+
+        @Override
+        public void handle(Event e)
+        {
+            if((boolean) ServiceHandler.getValues(ServiceID.CREATEACCOUNTSERVICE)){
+                AlertBoxLogIn.display("Account Alert", "Account successfully created!");
+            }
+            else{
+                AlertBoxLogIn.display("Account Alert", "Account creation failed!");
+            }
         }
     }
     
