@@ -59,14 +59,22 @@ public class DBHandler {
 
         try {
             stmt = connection.createStatement();
-            User admin = new User("admin", Position.ADMIN, "admin", Seniority.JUNIOR, 0, 0, AccountType.ADMIN, adminusername,
-                    adminpassword);
-            StringBuilder sql = new StringBuilder("INSERT INTO Users VALUES (1,");
+            User admin = new User("admin", Position.ADMIN, "admin", Seniority.JUNIOR, 0, 0, AccountType.ADMIN);
+            admin.setUsername(adminusername);
+            admin.setPassword(adminpassword);
+            String[] fieldNames = admin.getFieldsName();
+            StringBuilder sql = new StringBuilder("INSERT INTO Users (");
+
+            for(int i = 0 ;i < fieldNames.length -1 ; i++){
+                sql.append(fieldNames[i] + ",");
+            }
+            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
             String[] fields = admin.getFieldsData();
             for (int i = 0; i < fields.length - 1; i++) {
                 sql.append(fields[i] + ",");
             }
             sql.append(fields[fields.length - 1] + ")");
+            System.out.println(sql.toString());
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -104,15 +112,15 @@ public class DBHandler {
         try {
             stmt = connection.createStatement();
         
-        StringBuilder sql = new StringBuilder( "CREATE TABLE Users (\nid INTEGER not NULL,\n");
+        StringBuilder sql = new StringBuilder( "CREATE TABLE Users (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)\n");
         User dummy = new User();
         String[] fieldTypes = dummy.getFieldsType();
         String[] fieldNames = dummy.getFieldsName();
 
         for(int i = 0 ; i < fieldNames.length ; i++){
-            sql.append(fieldNames[i] + " " + fieldTypes[i] +",\n");
+            sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
         }
-        sql.append(" PRIMARY KEY ( id ))"); 
+        sql.append(")"); 
 
         System.out.println(sql.toString());
         stmt.executeUpdate(sql.toString());
@@ -145,9 +153,9 @@ public class DBHandler {
                                         Seniority.valueOf(rs.getString(fieldNames[3])),
                                         rs.getDouble(fieldNames[4]),
                                         rs.getInt(fieldNames[5]),
-                                        AccountType.valueOf(rs.getString(fieldNames[6])),
-                                        rs.getString(fieldNames[7]),
-                                        rs.getString(fieldNames[8]));
+                                        AccountType.valueOf(rs.getString(fieldNames[6])));
+                    findUser.setUsername(rs.getString(fieldNames[7]));
+                    findUser.setPasswordSHA(rs.getString(fieldNames[8]));
                     return findUser;
                 }
             }
@@ -159,7 +167,50 @@ public class DBHandler {
         }
     }
     
-    public  synchronized static void close(){
+    public synchronized static boolean insertUserIntoTable(User newUser){
+        try {
+            stmt = connection.createStatement();
+            String[] fieldNames = newUser.getFieldsName();
+            StringBuilder sql = new StringBuilder("INSERT INTO Users (");
+
+            for(int i = 0 ;i < fieldNames.length -1 ; i++){
+                sql.append(fieldNames[i] + ",");
+            }
+            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
+            String[] fields = newUser.getFieldsData();
+            for (int i = 0; i < fields.length - 1; i++) {
+                sql.append(fields[i] + ",");
+            }
+            sql.append(fields[fields.length - 1] + ")");
+            System.out.println(sql.toString());
+            stmt.executeUpdate(sql.toString());
+            return true;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public synchronized static boolean isUsernameUsed(String username){
+
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM Users WHERE username='"+username+"'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next())
+                return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return true;
+        }
+
+        return false;
+    }
+
+    public synchronized static void close(){
         try{
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
         }catch(SQLException ex){
