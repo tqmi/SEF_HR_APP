@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import SEF_HR_APP.backend.services.AuthenticationService;
 import SEF_HR_APP.backend.services.CreateAccountService;
+import SEF_HR_APP.backend.services.CreatePayOptionService;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
@@ -15,12 +16,14 @@ public class ServiceHandler {
         services = new ArrayList<>();
         services.add(new AuthenticationService());
         services.add(new CreateAccountService());
+        services.add(new CreatePayOptionService());
     }
 
     
     public enum ServiceID{
         AUTHENTICATIONSERVICE(0),
-        CREATEACCOUNTSERVICE(1);
+        CREATEACCOUNTSERVICE(1),
+        CREATEPAYOPTIONSERVICE(2);
 
         private int index;
 

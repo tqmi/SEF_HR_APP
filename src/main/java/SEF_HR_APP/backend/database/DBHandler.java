@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import SEF_HR_APP.backend.datamodels.user.AccountType;
 import SEF_HR_APP.backend.datamodels.user.Position;
 import SEF_HR_APP.backend.datamodels.user.Seniority;
@@ -49,7 +50,9 @@ public class DBHandler {
         connection = DriverManager.getConnection(dbURL + "create=true;");
         System.out.println("DB created! Adding User table ...");
         createUserTable();
-        System.out.println("User table added! Adding admin account ...");
+        System.out.println("User table added! Adding Pay Option table ...");
+        createPayOptionTable();
+        System.out.println("Pay Option table added! Adding admin account ...");
         addAdminAccountToTable();
     }
 
@@ -111,23 +114,43 @@ public class DBHandler {
     private synchronized static void createUserTable() {
         try {
             stmt = connection.createStatement();
-        
-        StringBuilder sql = new StringBuilder( "CREATE TABLE Users (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)\n");
-        User dummy = new User();
-        String[] fieldTypes = dummy.getFieldsType();
-        String[] fieldNames = dummy.getFieldsName();
+            
+            StringBuilder sql = new StringBuilder( "CREATE TABLE Users (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)\n");
+            User dummy = new User();
+            String[] fieldTypes = dummy.getFieldsType();
+            String[] fieldNames = dummy.getFieldsName();
 
-        for(int i = 0 ; i < fieldNames.length ; i++){
-            sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
+            for(int i = 0 ; i < fieldNames.length ; i++){
+                sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
+            }
+            sql.append(")"); 
+
+            System.out.println(sql.toString());
+            stmt.executeUpdate(sql.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        sql.append(")"); 
-
-        System.out.println(sql.toString());
-        stmt.executeUpdate(sql.toString());
-    } catch (SQLException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
     }
+
+    private synchronized static void createPayOptionTable() {
+        try {
+            stmt = connection.createStatement();
+            
+            StringBuilder sql = new StringBuilder( "CREATE TABLE PayOptions (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)\n");
+            PayOption dummy = new PayOption();
+            String[] fieldTypes = dummy.getFieldsType();
+            String[] fieldNames = dummy.getFieldsName();
+
+            for(int i = 0 ; i < fieldNames.length ; i++){
+                sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
+            }
+            sql.append(")"); 
+
+            System.out.println(sql.toString());
+            stmt.executeUpdate(sql.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public synchronized static User findUser(String user,String pass){
@@ -192,6 +215,33 @@ public class DBHandler {
         }
 
     }
+
+    public synchronized static boolean insertPayOptionIntoTable(PayOption newPayOption){
+        try {
+            stmt = connection.createStatement();
+            String[] fieldNames = newPayOption.getFieldsName();
+            StringBuilder sql = new StringBuilder("INSERT INTO PayOptions (");
+
+            for(int i = 0 ;i < fieldNames.length -1 ; i++){
+                sql.append(fieldNames[i] + ",");
+            }
+            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
+            String[] fields = newPayOption.getFieldsData();
+            for (int i = 0; i < fields.length - 1; i++) {
+                sql.append(fields[i] + ",");
+            }
+            sql.append(fields[fields.length - 1] + ")");
+            System.out.println(sql.toString());
+            stmt.executeUpdate(sql.toString());
+            return true;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
 
     public synchronized static boolean isUsernameUsed(String username){
 
