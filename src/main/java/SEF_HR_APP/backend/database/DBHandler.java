@@ -72,7 +72,7 @@ public class DBHandler {
 
         try {
             stmt = connection.createStatement();
-            User admin = new User("admin", Position.ADMIN, "admin", Seniority.JUNIOR, 0, 0, AccountType.ADMIN);
+            User admin = new User("admin", Position.ADMIN, "admin", Seniority.JUNIOR, 0, 0, AccountType.SUPERVISOR_OPERATOR);
             admin.setUsername(adminusername);
             admin.setPassword(adminpassword);
             String[] fieldNames = admin.getFieldsName();

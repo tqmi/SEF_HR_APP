@@ -3,6 +3,7 @@ package SEF_HR_APP.frontend.scenes;
 import SEF_HR_APP.backend.datamodels.user.User;
 import SEF_HR_APP.frontend.MainLogin;
 import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
+import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -102,14 +103,17 @@ public class MainScene extends Scene {
 
 		//setting and fixing division line between panels (can be flexible)
 		split.setDividerPositions(0.25);
-		menuPanel.maxWidthProperty().bind(split.widthProperty().multiply(0.25));
+		scroll.maxWidthProperty().bind(split.widthProperty().multiply(0.25));
 
 		//setting Scrolling properties to encapsulate menuPanel
 		scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
-		scroll.maxWidth(100);
-		scroll.setContent(menuPanel);
+		//wraper for centering VBox
+		StackPane wraper = new StackPane();
+		wraper.getChildren().add(menuPanel);
+		wraper.minWidthProperty().bind(Bindings.createDoubleBinding(() -> 
+        scroll.getViewportBounds().getWidth(), scroll.viewportBoundsProperty()));
+		scroll.setContent(wraper);
 		
-
 		split.getItems().addAll(scroll, right);
 
 		

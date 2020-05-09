@@ -65,7 +65,7 @@ public class MainLogin extends Application {
 
 	// implement transition to main scene
 	public void transToMainScene() {
-		Scene scene = new MainScene(500, 350, this);
+		Scene scene = new MainScene(600, 600, this);
 		window.setTitle("HRSolution");
 		window.setScene(scene);
 		window.show();
