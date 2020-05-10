@@ -30,13 +30,13 @@ public class CreateAccountScene extends GridPane {
     private TextField namebox;
 
     private Label position;
-    private ComboBox posbox;
+    private ComboBox<Position> posbox;
 
     private Label email;
     private TextField emailbox;
 
     private Label seniority;
-    private ComboBox senbox;
+    private ComboBox<Seniority> senbox;
 
     private Label salary;
     private TextField salarybox;
@@ -45,7 +45,7 @@ public class CreateAccountScene extends GridPane {
     private TextField leaveDaysbox;
 
     private Label accType;
-    private ComboBox accTypebox;
+    private ComboBox<AccountType> accTypebox;
 
     private Button create_button;
 
@@ -73,7 +73,7 @@ public class CreateAccountScene extends GridPane {
         //work position
         position = new Label("Choose employee position:");
         this.add(position, 0, 2);
-        posbox = new ComboBox();
+        posbox = new ComboBox<>();
         posbox.getItems().addAll(Arrays.asList(Position.values()));
         this.add(posbox, 1, 2);
 
@@ -86,7 +86,7 @@ public class CreateAccountScene extends GridPane {
         //seniority in work domain
         seniority = new Label("Choose employee seniority:");
         this.add(seniority, 0, 4);
-        senbox = new ComboBox();
+        senbox = new ComboBox<>();
         senbox.getItems().addAll(Arrays.asList(Seniority.values()));
         this.add(senbox, 1, 4);
 
@@ -105,7 +105,7 @@ public class CreateAccountScene extends GridPane {
         //account type
         accType = new Label("Choose account type:");
         this.add(accType, 0, 7);
-        accTypebox = new ComboBox();
+        accTypebox = new ComboBox<>();
         accTypebox.getItems().addAll(Arrays.asList(AccountType.values()));
         this.add(accTypebox, 1, 7);
 
@@ -138,7 +138,7 @@ public class CreateAccountScene extends GridPane {
             if(namebox.getText().trim().isEmpty() || posbox.getSelectionModel().isEmpty() || emailbox.getText().trim().isEmpty() || senbox.getSelectionModel().isEmpty() || salarybox.getText().trim().isEmpty() || !numericPattern.matcher(salarybox.getText().trim()).matches() || leaveDaysbox.getText().trim().isEmpty() || !numericPattern.matcher(leaveDaysbox.getText().trim()).matches() || accTypebox.getSelectionModel().isEmpty())
                 AlertBoxLogIn.display("Alert", "All forms are mandatory to fill");
             else if(matcher.matches()){
-                    ServiceHandler.setValues(ServiceID.CREATEACCOUNTSERVICE, new User(namebox.getText(), (Position) posbox.getSelectionModel().getSelectedItem(), emailbox.getText(), (Seniority) senbox.getSelectionModel().getSelectedItem(), Double.valueOf(salarybox.getText()), Integer.valueOf(leaveDaysbox.getText()), (AccountType) accTypebox.getSelectionModel().getSelectedItem()));
+                    ServiceHandler.setValues(ServiceID.CREATEACCOUNTSERVICE, new User(namebox.getText(), posbox.getSelectionModel().getSelectedItem(), emailbox.getText(), senbox.getSelectionModel().getSelectedItem(), Double.valueOf(salarybox.getText()), Integer.valueOf(leaveDaysbox.getText()), accTypebox.getSelectionModel().getSelectedItem()));
                     ServiceHandler.startService(ServiceID.CREATEACCOUNTSERVICE);
                     AlertBoxLogIn.display("Account Alert", "Working...");
                 }

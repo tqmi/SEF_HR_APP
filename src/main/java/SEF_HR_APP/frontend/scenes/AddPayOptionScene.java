@@ -1,5 +1,8 @@
 package SEF_HR_APP.frontend.scenes;
 
+import SEF_HR_APP.backend.ServiceHandler;
+import SEF_HR_APP.backend.ServiceHandler.ServiceID;
+import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import SEF_HR_APP.frontend.popUpBoxes.AlertBoxLogIn;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -11,13 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import java.util.Arrays;
-import SEF_HR_APP.backend.ServiceHandler;
-import SEF_HR_APP.backend.ServiceHandler.ServiceID;
-import SEF_HR_APP.backend.datamodels.payoption.PayOption;
-import SEF_HR_APP.backend.datamodels.user.AccountType;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class AddPayOptionScene extends GridPane {
 
