@@ -7,9 +7,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Scanner;
-
-import org.apache.derby.iapi.types.BooleanDataValue;
 
 import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
 import SEF_HR_APP.backend.datamodels.activity.ActivityPayOptionLink;
@@ -98,7 +97,7 @@ public class DBHandler {
                 sql.append(fields[i] + ",");
             }
             sql.append(fields[fields.length - 1] + ")");
-            System.out.println(sql.toString());
+            System.out.println(sql.toString()+"\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -155,7 +154,7 @@ public class DBHandler {
             }
             sql.append(")"); 
 
-            System.out.println(sql.toString());
+            System.out.println(sql.toString()+"\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -179,7 +178,7 @@ public class DBHandler {
             }
             sql.append(")"); 
 
-            System.out.println(sql.toString());
+            System.out.println(sql.toString()+"\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -203,7 +202,7 @@ public class DBHandler {
             }
             sql.append(")"); 
 
-            System.out.println(sql.toString());
+            System.out.println(sql.toString()+"\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -227,7 +226,7 @@ public class DBHandler {
             }
             sql.append(")"); 
 
-            System.out.println(sql.toString());
+            System.out.println(sql.toString()+"\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -251,6 +250,7 @@ public class DBHandler {
             stmt = connection.createStatement();
 
             String sql = "SELECT * FROM Users";
+            System.out.println(sql.toString()+"\n");
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 if (user.equals(rs.getString("username")) && pass.equals(rs.getString("password"))){
@@ -297,7 +297,7 @@ public class DBHandler {
                 sql.append(fields[i] + ",");
             }
             sql.append(fields[fields.length - 1] + ")");
-            System.out.println(sql.toString());
+            System.out.println(sql.toString()+"\n");
             stmt.executeUpdate(sql.toString());
             return true;
         } catch (SQLException e) {
@@ -328,7 +328,7 @@ public class DBHandler {
                 sql.append(fields[i] + ",");
             }
             sql.append(fields[fields.length - 1] + ")");
-            System.out.println(sql.toString());
+            System.out.println(sql.toString()+"\n");
             stmt.executeUpdate(sql.toString());
             return true;
         } catch (SQLException e) {
@@ -337,6 +337,30 @@ public class DBHandler {
             return false;
         }
 
+    }
+
+    public synchronized static ArrayList<PayOption> getPayoptions(){
+        ArrayList<PayOption> retList = new ArrayList<>();
+
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM PayOptions";     
+            System.out.println(sql.toString()+"\n");
+            ResultSet rs = stmt.executeQuery(sql);  
+
+            while(rs.next()){
+                PayOption tmp = new PayOption(rs.getString("name"),rs.getDouble("percentage"),rs.getString("basis"));
+                tmp.setId(rs.getInt("id"));
+                retList.add(tmp);
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+
+        return retList;
     }
 
     /**
@@ -349,7 +373,8 @@ public class DBHandler {
         try {
             stmt = connection.createStatement();
 
-            String sql = "SELECT * FROM Users WHERE username='"+username+"'";
+            String sql = "SELECT * FROM Users WHERE username='"+username+"'";  
+            System.out.println(sql.toString()+"\n");
             ResultSet rs = stmt.executeQuery(sql);
             if(rs.next())
                 return true;
@@ -365,7 +390,8 @@ public class DBHandler {
         try {
             stmt = connection.createStatement();
 
-            String sql = "SELECT id FROM Users WHERE username='"+user.getUsername()+"'";
+            String sql = "SELECT id FROM Users WHERE username='"+user.getUsername()+"'"; 
+            System.out.println(sql.toString()+"\n");
             ResultSet rs = stmt.executeQuery(sql);
             if(rs.next())
                 return rs.getInt("id");
@@ -388,6 +414,7 @@ public class DBHandler {
             stmt = connection.createStatement();
 
             String sql = "SELECT id FROM Activities WHERE linkedUser="+act.getFieldsData()[0] + " AND month="+act.getFieldsData()[1];
+            System.out.println(sql.toString()+"\n");
             ResultSet rs = stmt.executeQuery(sql);
             if(rs.next()){
                 return rs.getInt("id");
@@ -426,7 +453,7 @@ public class DBHandler {
                 sql.append(fields[i] + ",");
             }
             sql.append(fields[fields.length - 1] + ")");
-            System.out.println(sql.toString());
+            System.out.println(sql.toString()+"\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -454,7 +481,7 @@ public class DBHandler {
                     sql.append(fields[i] + ",");
                 }
                 sql.append(fields[fields.length - 1] + ")");
-                System.out.println(sql.toString());
+                System.out.println(sql.toString()+"\n");
                 stmt.executeUpdate(sql.toString());
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
@@ -476,8 +503,6 @@ public class DBHandler {
      */
     public synchronized static ActivityInformation findActivityInformation(User user, MonthType month){
         
-        System.out.println("Finding act info");
-
         ActivityInformation findActivityInformation = null;
 
         if(user == null || month == null)
@@ -488,14 +513,17 @@ public class DBHandler {
 
             String sql = "SELECT B.linkedUser,B.month,C.id,C.name,C.percentage,C.basis,D.hoursBooked\n"+
                          "FROM Users A,Activities B,PayOptions C, ActToPay D\n"+
-                         "WHERE A.id = B.linkedUser AND D.activity = B.id AND D.payoption = C.id AND A.username = '" + user.getUsername()+"'";
+                         "WHERE A.id = B.linkedUser AND D.activity = B.id AND D.payoption = C.id AND A.username = '" + user.getUsername()+"' AND B.month = '"+month.getStringRepresentation()+"'";
+                         
+            System.out.println(sql.toString()+"\n");
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 if(findActivityInformation == null){
                     findActivityInformation = new ActivityInformation(MonthType.valueOf(rs.getString("month")));
                 }
-                
-                findActivityInformation.addNewPayOption(new PayOption(rs.getString("name"), rs.getDouble("percentage"), rs.getString("basis")), rs.getInt("hoursBooked"));
+                PayOption tmpopt = new PayOption(rs.getString("name"), rs.getDouble("percentage"),rs.getString("basis"));
+                tmpopt.setId(rs.getInt("id"));
+                findActivityInformation.addNewPayOption(tmpopt, rs.getInt("hoursBooked"));
             }
             
             return findActivityInformation;
