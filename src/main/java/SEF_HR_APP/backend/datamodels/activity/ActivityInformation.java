@@ -51,6 +51,12 @@ public class ActivityInformation implements DBEntry{
         bookedHours.add(hours);  
     }
 
+    public void clearOptions(){
+        options.clear();
+        bookedHours.clear();
+    }
+
+
     @Override
     public String[] getFieldsName() {
         return fieldNames;
