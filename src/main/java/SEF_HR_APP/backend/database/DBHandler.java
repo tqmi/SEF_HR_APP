@@ -462,6 +462,7 @@ public class DBHandler {
         }
 
         int actID = findActivityID(newAct);
+        deleteLinks(actID);
 
         for(int j = 0 ; j < newAct.getOptionCount() ; j++){
 
@@ -491,6 +492,21 @@ public class DBHandler {
 
         }
         return true;
+
+    }
+
+    private synchronized static void deleteLinks(int actID){
+        
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "DELETE FROM ActToPay WHERE activity = " +actID;
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql);
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
