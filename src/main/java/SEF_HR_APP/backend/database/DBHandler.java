@@ -9,8 +9,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import org.apache.derby.iapi.types.BooleanDataValue;
+
 import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
 import SEF_HR_APP.backend.datamodels.activity.ActivityPayOptionLink;
+import SEF_HR_APP.backend.datamodels.activity.MonthType;
 import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import SEF_HR_APP.backend.datamodels.user.AccountType;
 import SEF_HR_APP.backend.datamodels.user.Position;
@@ -27,6 +30,11 @@ public class DBHandler {
     private static Connection connection;
     private static Statement stmt;
 
+
+    /**
+     * Initialize database connection or create new database if it not exists
+     * @return
+     */
     public synchronized static boolean connectDB() {
 
         try {
@@ -48,6 +56,10 @@ public class DBHandler {
 
     }
 
+    /**
+     * Creates the database with all its tables
+     * @throws SQLException
+     */
     private synchronized static void createDB() throws SQLException {
         connection = DriverManager.getConnection(dbURL + "create=true;");
         System.out.println("DB created! Adding User table ...");
@@ -61,11 +73,10 @@ public class DBHandler {
         System.out.println("Link table added! Adding admin account ...");
         addAdminAccountToTable();
     }
-
-   
-
     
-
+    /**
+     * Inserts addmin account in User table
+     */
     private synchronized static void addAdminAccountToTable() {
 
         readAdminAccountDetails();
@@ -97,6 +108,9 @@ public class DBHandler {
 
     }
 
+    /**
+     * Checks if there exists a setup file for admin account credentials and loads them
+     */
     private synchronized static void readAdminAccountDetails() {
         try {
             Scanner sc = new Scanner(new FileInputStream(adminFile));
@@ -116,11 +130,17 @@ public class DBHandler {
         
     }
 
+    /**
+     * Set defaults for admin credentials
+     */
     private synchronized static void adminUseDefaults(){
         adminusername = "admin";
         adminpassword = "admin";
     }
 
+    /**
+     * Create user table
+     */
     private synchronized static void createUserTable() {
         try {
             stmt = connection.createStatement();
@@ -142,6 +162,9 @@ public class DBHandler {
         }
     }
 
+    /**
+     * Create pay options table
+     */
     private synchronized static void createPayOptionTable() {
         try {
             stmt = connection.createStatement();
@@ -163,6 +186,9 @@ public class DBHandler {
         }
     }
 
+    /**
+     * Create activity information table
+     */
     private static void createActivityInformationTable() {
         try {
             stmt = connection.createStatement();
@@ -184,6 +210,9 @@ public class DBHandler {
         }
     }
 
+    /**
+     * Create link table for n to n connection between activity and pay options tables
+     */
     private static void createLinkTable() {
         try {
             stmt = connection.createStatement();
@@ -205,6 +234,12 @@ public class DBHandler {
         }
     }
 
+    /**
+     * Searches the database for user with specified credentials
+     * @param user the username of the user
+     * @param pass the password of the user
+     * @return User object of the searched user or null if not found
+     */
     public synchronized static User findUser(String user,String pass){
 
         User findUser;
@@ -242,6 +277,11 @@ public class DBHandler {
         }
     }
     
+    /**
+     * Inserts user specified by newUser into the db
+     * @param newUser the user to store
+     * @return Status of operation succeeded
+     */
     public synchronized static boolean insertUserIntoTable(User newUser){
         try {
             stmt = connection.createStatement();
@@ -268,6 +308,11 @@ public class DBHandler {
 
     }
 
+    /**
+     * Inserts pay option specified by newPayOption into the db
+     * @param newPayOption the pay option to store
+     * @return Status of operation succeeded
+     */
     public synchronized static boolean insertPayOptionIntoTable(PayOption newPayOption){
         try {
             stmt = connection.createStatement();
@@ -294,7 +339,11 @@ public class DBHandler {
 
     }
 
-
+    /**
+     * Checks if a username is already in the db
+     * @param username username to search for
+     * @return if it is used or not
+     */
     public synchronized static boolean isUsernameUsed(String username){
 
         try {
@@ -312,6 +361,154 @@ public class DBHandler {
         return false;
     }
 
+    public synchronized static int findUserID(User user){
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT id FROM Users WHERE username='"+user.getUsername()+"'";
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next())
+                return rs.getInt("id");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
+        return 0;
+    }
+
+
+    /**
+     * Returns activities ID
+     * @param act
+     * @return
+     */
+    private synchronized static int findActivityID(ActivityInformation act){
+
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT id FROM Activities WHERE linkedUser="+act.getFieldsData()[0] + " AND month="+act.getFieldsData()[1];
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()){
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
+
+        return 0;
+        
+    }
+
+
+    /**
+     * 
+     * @param newAct
+     * @return
+     */
+    public synchronized static boolean insertActivityInformation(ActivityInformation newAct){
+
+        if(newAct == null)
+            return false;
+        
+        try {
+            stmt = connection.createStatement();
+            String[] fieldNames = newAct.getFieldsName();
+            StringBuilder sql = new StringBuilder("INSERT INTO Activities (");
+
+            for(int i = 0 ;i < fieldNames.length -1 ; i++){
+                sql.append(fieldNames[i] + ",");
+            }
+            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
+            String[] fields = newAct.getFieldsData();
+            for (int i = 0; i < fields.length - 1; i++) {
+                sql.append(fields[i] + ",");
+            }
+            sql.append(fields[fields.length - 1] + ")");
+            System.out.println(sql.toString());
+            stmt.executeUpdate(sql.toString());
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+
+        int actID = findActivityID(newAct);
+
+        for(int j = 0 ; j < newAct.getOptionCount() ; j++){
+
+            ActivityPayOptionLink link = new ActivityPayOptionLink(actID,newAct.getOption(j).getId() ,newAct.getHours(j));
+
+            try {
+                stmt = connection.createStatement();
+                String[] fieldNames = link.getFieldsName();
+                StringBuilder sql = new StringBuilder("INSERT INTO ActToPay (");
+
+                for(int i = 0 ;i < fieldNames.length -1 ; i++){
+                    sql.append(fieldNames[i] + ",");
+                }
+                sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
+                String[] fields = link.getFieldsData();
+                for (int i = 0; i < fields.length - 1; i++) {
+                    sql.append(fields[i] + ",");
+                }
+                sql.append(fields[fields.length - 1] + ")");
+                System.out.println(sql.toString());
+                stmt.executeUpdate(sql.toString());
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return false;
+            }
+
+        }
+        return true;
+
+    }
+
+
+    /**
+     * Searches for an activity for a user 
+     * @param user
+     * @param month
+     * @return
+     */
+    public synchronized static ActivityInformation findActivityInformation(User user, MonthType month){
+        
+        System.out.println("Finding act info");
+
+        ActivityInformation findActivityInformation = null;
+
+        if(user == null || month == null)
+            return null;
+
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT B.linkedUser,B.month,C.id,C.name,C.percentage,C.basis,D.hoursBooked\n"+
+                         "FROM Users A,Activities B,PayOptions C, ActToPay D\n"+
+                         "WHERE A.id = B.linkedUser AND D.activity = B.id AND D.payoption = C.id AND A.username = '" + user.getUsername()+"'";
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                if(findActivityInformation == null){
+                    findActivityInformation = new ActivityInformation(MonthType.valueOf(rs.getString("month")));
+                }
+                
+                findActivityInformation.addNewPayOption(new PayOption(rs.getString("name"), rs.getDouble("percentage"), rs.getString("basis")), rs.getInt("hoursBooked"));
+            }
+            
+            return findActivityInformation;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
+
+    /**
+     * Closes the db connection
+     */
     public synchronized static void close(){
         try{
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
