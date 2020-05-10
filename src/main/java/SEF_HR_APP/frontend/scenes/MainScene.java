@@ -1,22 +1,24 @@
 package SEF_HR_APP.frontend.scenes;
 
+import SEF_HR_APP.backend.ServiceHandler;
+import SEF_HR_APP.backend.ServiceHandler.ServiceID;
 import SEF_HR_APP.backend.datamodels.user.User;
 import SEF_HR_APP.frontend.MainLogin;
 import SEF_HR_APP.frontend.popUpBoxes.TEMPConfirmBox;
 import javafx.beans.binding.Bindings;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Window;
 
 public class MainScene extends Scene {
 
@@ -97,10 +99,10 @@ public class MainScene extends Scene {
 		//creating right panel where main activity will take place
 		right = new GridPane();
 
-		menuOpt1.setOnMouseClicked(new createAccHandler());
-		menuOpt4.setOnMouseClicked(new addPayOptionHandler());
-
-
+		menuOpt1.setOnMouseClicked(new CreateAccHandler());
+		menuOpt4.setOnMouseClicked(new AddPayOptionHandler());
+		menuOpt9.setOnMouseClicked(new ProvideActivityHandler());
+		
 		//setting and fixing division line between panels (can be flexible)
 		split.setDividerPositions(0.25);
 		scroll.maxWidthProperty().bind(split.widthProperty().multiply(0.25));
@@ -118,7 +120,7 @@ public class MainScene extends Scene {
 
 		
 		//call for Event Handler to begin logout process
-		logout_button.setOnMouseClicked(new logoutHandler());
+		logout_button.setOnMouseClicked(new LogoutHandler());
 		
 
 		this.setRoot(split);
@@ -130,7 +132,7 @@ public class MainScene extends Scene {
 			if clicked -> pop up will appear
 			when user logs out, will be sent back to login screen
 		*/
-	private class logoutHandler implements EventHandler<MouseEvent> {
+	private class LogoutHandler implements EventHandler<MouseEvent> {
 
 		@Override
 		public void handle(MouseEvent e)
@@ -140,7 +142,7 @@ public class MainScene extends Scene {
 		}
 	}
 
-	private class createAccHandler implements EventHandler<MouseEvent> {
+	private class CreateAccHandler implements EventHandler<MouseEvent> {
 
 		@Override
 		public void handle(MouseEvent e)
@@ -151,7 +153,7 @@ public class MainScene extends Scene {
 		}
 	}
 
-	private class addPayOptionHandler implements EventHandler<MouseEvent> {
+	private class AddPayOptionHandler implements EventHandler<MouseEvent> {
 
 		@Override
 		public void handle(MouseEvent e)
@@ -161,5 +163,17 @@ public class MainScene extends Scene {
 			split.getItems().add(right);
 		}
 	}
+
+	private class ProvideActivityHandler implements EventHandler<MouseEvent>{
+
+		@Override
+		public void handle(MouseEvent event) {
+			split.getItems().remove(right);
+			right = new ProvideActivityScene();
+			split.getItems().add(right);
+		}
+
+	}
+
 
 }
