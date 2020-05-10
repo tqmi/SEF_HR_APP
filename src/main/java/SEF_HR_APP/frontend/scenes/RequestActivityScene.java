@@ -71,6 +71,7 @@ public class RequestActivityScene extends GridPane {
             ActivityInformation activity =((RetrieveActivityInfoResponse) ServiceHandler.getValues(ServiceID.RETRIEVEACTIVITYSERVICE)).getActivityInformation();
             if(activity == null){
                 AlertBoxLogIn.display("Alert", "No activity found for selected month!");
+                return;
             }
 
             for(int i = 0 ; i < activity.getOptionCount() ; i++){
