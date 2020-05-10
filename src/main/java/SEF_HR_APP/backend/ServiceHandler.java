@@ -1,8 +1,6 @@
 package SEF_HR_APP.backend;
 
-import SEF_HR_APP.backend.services.AuthenticationService;
-import SEF_HR_APP.backend.services.CreateAccountService;
-import SEF_HR_APP.backend.services.CreatePayOptionService;
+import SEF_HR_APP.backend.services.*;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
@@ -14,7 +12,9 @@ public class ServiceHandler {
     public enum ServiceID{
         AUTHENTICATIONSERVICE(new AuthenticationService()),
         CREATEACCOUNTSERVICE(new CreateAccountService()),
-        CREATEPAYOPTIONSERVICE(new CreatePayOptionService());
+        CREATEPAYOPTIONSERVICE(new CreatePayOptionService()),
+        STOREACTIVITYSERVICE(new StoreActivityService()),
+        RETRIEVEACTIVITYSERVICE(new RetrieveActivityService());
 
         private ServiceTemplate service;
 
