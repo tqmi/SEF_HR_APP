@@ -3,8 +3,6 @@ package SEF_HR_APP.frontend.scenes;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.checkerframework.checker.units.qual.h;
-
 import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.backend.ServiceHandler.ServiceID;
 import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
@@ -37,6 +35,8 @@ public class ProvideActivityScene extends GridPane {
     private ArrayList<PayOption> optionList;
     private ActivityInformation activity;
     private Button saveBtn;
+    private DeleteHandler deleteHandler;
+    private ArrayList<Button> deleteBtns;
 
     public ProvideActivityScene(){
         super();
@@ -46,6 +46,8 @@ public class ProvideActivityScene extends GridPane {
         this.setVgap(10);
         this.setPadding(new Insets(25, 25, 25, 25));
         
+        deleteHandler = new DeleteHandler();
+
         month = new Label("Month:");
         monthBox = new ComboBox<>();
         monthBox.getItems().addAll(Arrays.asList(MonthType.values()));
@@ -70,6 +72,7 @@ public class ProvideActivityScene extends GridPane {
 
         options = new ArrayList<>();
         hours = new ArrayList<>();
+        deleteBtns = new ArrayList<>();
     }
 
     private class ActivityLoadedHandler implements EventHandler<Event>{
@@ -83,6 +86,10 @@ public class ProvideActivityScene extends GridPane {
             for(ComboBox t : options)
                 instance.getChildren().remove(t);
             options.clear();
+            for(Button t : deleteBtns)
+                instance.getChildren().remove(t);
+            deleteBtns.clear();
+
             instance.requestLayout();
 
             activity =((RetrieveActivityInfoResponse) ServiceHandler.getValues(ServiceID.RETRIEVEACTIVITYSERVICE)).getActivityInformation();
@@ -101,9 +108,13 @@ public class ProvideActivityScene extends GridPane {
                 tmpbox.getItems().addAll(optionList);
                 tmpbox.getSelectionModel().select(opt);
                 options.add(tmpbox);
+                Button deleteBtn = new Button("X");
+                deleteBtn.setOnMouseClicked(deleteHandler);
+                deleteBtns.add(deleteBtn);
 
                 instance.add(tmpbox, 0, instance.getRowCount());
                 instance.add(tmph, 1, instance.getRowCount()-1);
+                instance.add(deleteBtn,2,instance.getRowCount()-1);
 
             }
         }
@@ -132,12 +143,41 @@ public class ProvideActivityScene extends GridPane {
             ComboBox<PayOption> tmpbox = new ComboBox<>();
             tmpbox.getItems().addAll(optionList);
             options.add(tmpbox);
+            Button deleteBtn = new Button("X");
+            deleteBtn.setOnMouseClicked(deleteHandler);
+            deleteBtns.add(deleteBtn);
 
             instance.add(tmpbox, 0, instance.getRowCount());
             instance.add(tmph, 1, instance.getRowCount()-1);
+            instance.add(deleteBtn,2,instance.getRowCount()-1);
         }
     }
 
+    private class DeleteHandler implements EventHandler<MouseEvent>{
+
+        @Override
+        public void handle(MouseEvent event) {
+            Button cbtn = (Button)event.getSource();
+            int row = instance.getRowIndex(cbtn);
+            for(TextField t : hours){
+                if(instance.getRowIndex(t) == row){
+                    instance.getChildren().remove(t);
+                    hours.remove(t);
+                    break;
+                }
+            }
+            for(ComboBox<PayOption> t : options){
+                if(instance.getRowIndex(t) == row){
+                    instance.getChildren().remove(t);
+                    options.remove(t);
+                    break;
+                }
+            }
+            instance.getChildren().remove(cbtn);
+            instance.requestLayout();
+        }
+
+    }
     
     private class StoreActivityHandler implements EventHandler<Event>{
 
