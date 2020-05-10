@@ -101,6 +101,7 @@ public class MainScene extends Scene {
 
 		menuOpt1.setOnMouseClicked(new CreateAccHandler());
 		menuOpt4.setOnMouseClicked(new AddPayOptionHandler());
+		menuOpt8.setOnMouseClicked(new RequestActivityHandler());
 		menuOpt9.setOnMouseClicked(new ProvideActivityHandler());
 		
 		//setting and fixing division line between panels (can be flexible)
@@ -175,5 +176,15 @@ public class MainScene extends Scene {
 
 	}
 
+	private class RequestActivityHandler implements EventHandler<MouseEvent>{
+
+		@Override
+		public void handle(MouseEvent event) {
+			split.getItems().remove(right);
+			right = new RequestActivityScene();
+			split.getItems().add(right);
+		}
+
+	}
 
 }

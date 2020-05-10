@@ -2,6 +2,7 @@ package SEF_HR_APP.frontend.scenes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.backend.ServiceHandler.ServiceID;
@@ -126,6 +127,12 @@ public class ProvideActivityScene extends GridPane {
         @Override
         public void handle(MouseEvent event) {
 
+            if(monthBox.getSelectionModel().getSelectedItem().monthDifferenceToCurrent() >= 2){
+                AlertBoxLogIn.display("Alert", "You can provide activity information only for the last 2 months!");
+                return;
+            }
+
+
             ServiceHandler.setValues(ServiceID.RETRIEVEACTIVITYSERVICE, new RetrieveActivityInfo(null, monthBox.getSelectionModel().getSelectedItem()));
             ServiceHandler.startService(ServiceID.RETRIEVEACTIVITYSERVICE);
             AlertBoxLogIn.display("Alert", "Loading...");
@@ -184,6 +191,20 @@ public class ProvideActivityScene extends GridPane {
         @Override
         public void handle(Event event) {
            
+            if(monthBox.getSelectionModel().getSelectedItem().monthDifferenceToCurrent() >= 2){
+                AlertBoxLogIn.display("Alert", "You can provide activity information only for the last 2 months!");
+                return;
+            }
+            //regex for numeric fields
+            Pattern numericPattern = Pattern.compile("\\d+(\\.\\d+)?");
+            
+            for(int i = 0 ; i < options.size() ; i++){
+                if(options.get(i).getSelectionModel().getSelectedItem() == null || hours.get(i).getText().trim().isEmpty() || !numericPattern.matcher(hours.get(i).getText().trim()).matches()){
+                    AlertBoxLogIn.display("Alert", "You must complete all fields!");
+                    return;
+                }
+            }
+
             activity.clearOptions();
 
             for(int i = 0 ; i < options.size() ; i++){

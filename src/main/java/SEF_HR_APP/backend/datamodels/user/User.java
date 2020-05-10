@@ -150,6 +150,9 @@ public class User implements DBEntry{
         this.email = email;
     }
 
+    public double getSalary(){
+        return this.salary;
+    }
     
 
 }

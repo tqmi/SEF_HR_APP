@@ -66,6 +66,9 @@ public class PayOption implements DBEntry{
         return name;
     }
 
+    public double getPercentage(){
+        return percentage;
+    }
 
 
     
