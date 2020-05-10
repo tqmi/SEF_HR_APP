@@ -8,6 +8,7 @@ import SEF_HR_APP.backend.ServiceHandler.ServiceID;
 import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
 import SEF_HR_APP.backend.datamodels.activity.MonthType;
 import SEF_HR_APP.backend.datamodels.payoption.PayOption;
+import SEF_HR_APP.backend.datamodels.user.User;
 import SEF_HR_APP.frontend.popUpBoxes.AlertBoxLogIn;
 import SEF_HR_APP.interfaces.RetrieveActivityInfo;
 import SEF_HR_APP.interfaces.RetrieveActivityInfoResponse;
@@ -74,14 +75,22 @@ public class RequestActivityScene extends GridPane {
                 return;
             }
 
+            double totalSalary = 0;
+
             for(int i = 0 ; i < activity.getOptionCount() ; i++){
                 PayOption opt = activity.getOption(i);
+                double bonusReceived = User.getCurrentUser().getSalary();
                 int hour = activity.getHours(i);
+                bonusReceived *= hour * opt.getPercentage() /100;
                 Text tmpText = new Text();
-                tmpText.setText(opt.toString()+" : "+hour + " hours");
+                tmpText.setText(opt.toString()+" : "+hour + " hours - pay : " + bonusReceived);
+                totalSalary += bonusReceived;
                 entries.add(tmpText);
                 instance.add(tmpText, 0, instance.getRowCount(),3,1);
             }
+            Text total = new Text("Total salary for " + monthBox.getSelectionModel().getSelectedItem().getStringRepresentation() + " : "+totalSalary );
+            entries.add(total);
+            instance.add(total, 0,instance.getRowCount(), 3, 1);
         }
         
     }
