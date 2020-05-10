@@ -12,6 +12,7 @@ public class PayOption implements DBEntry{
     private String name;
     private double percentage;
     private String basis;
+    private int id;
 
 
     public PayOption() {
@@ -31,6 +32,13 @@ public class PayOption implements DBEntry{
         fieldValues[2] = "'" + basis + "'";
     }
 
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public int getId(){
+        return id;
+    }
 
     @Override
     public String[] getFieldsName() {
@@ -45,6 +53,17 @@ public class PayOption implements DBEntry{
     @Override
     public String[] getFieldsType() {
         return fieldType;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 

@@ -24,7 +24,6 @@ public class MainLogin extends Application {
 
 	@Override
 	public void init() throws Exception {
-		ServiceHandler.initialize();
 		DBHandler.connectDB();
 		MailService.initialize();
 		super.init();
@@ -65,7 +64,7 @@ public class MainLogin extends Application {
 
 	// implement transition to main scene
 	public void transToMainScene() {
-		Scene scene = new MainScene(500, 350, this);
+		Scene scene = new MainScene(600, 600, this);
 		window.setTitle("HRSolution");
 		window.setScene(scene);
 		window.show();
