@@ -13,7 +13,7 @@ public class RetrieveUserTask extends Task<User> {
     @Override
     protected User call() throws Exception {
 
-        if(User.getCurrentUser().getaccountType() != AccountType.EMPLOYEE_OPERATOR && User.getCurrentUser().getaccountType() != AccountType.SUPERVISOR_OPERATOR)
+        if(User.getCurrentUser().getaccountType() != AccountType.EMPLOYEE_OPERATOR && User.getCurrentUser().getaccountType() != AccountType.SUPERVISOR_OPERATOR && User.getCurrentUser().getaccountType() != AccountType.SUPERVISOR)
             return null;
 
 
