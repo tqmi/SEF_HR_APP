@@ -249,10 +249,10 @@ public class DBHandler {
         try {
             stmt = connection.createStatement();
 
-            String sql = "SELECT * FROM Users";
+            String sql = "SELECT * FROM Users WHERE username = '"+user+"' AND password = '"+pass+"'";
             System.out.println(sql.toString()+"\n");
             ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
+            if(rs.next()) {
                 if (user.equals(rs.getString("username")) && pass.equals(rs.getString("password"))){
                     
                     User dummy = new User();
@@ -277,6 +277,49 @@ public class DBHandler {
         }
     }
     
+    /**
+    * Searches the database for user with specified credentials
+    * @param user the username of the user
+    * @param pass the password of the user
+    * @return User object of the searched user or null if not found
+    */
+    public synchronized static User getUser(String user){
+
+        User findUser;
+
+        if(user == null)
+            return null;
+
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM Users WHERE username = '" + user + "'";
+            System.out.println(sql.toString()+"\n");
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next()) {
+                User dummy = new User();
+                String[] fieldNames = dummy.getFieldsName();
+                findUser = new User(rs.getString(fieldNames[0]),
+                                    Position.valueOf(rs.getString(fieldNames[1])),
+                                    rs.getString(fieldNames[2]),
+                                    Seniority.valueOf(rs.getString(fieldNames[3])),
+                                    rs.getDouble(fieldNames[4]),
+                                    rs.getInt(fieldNames[5]),
+                                    AccountType.valueOf(rs.getString(fieldNames[6])));
+                findUser.setUsername(rs.getString(fieldNames[7]));
+                return findUser;
+            }
+            
+
+            return null;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+    
+
+
     /**
      * Inserts user specified by newUser into the db
      * @param newUser the user to store

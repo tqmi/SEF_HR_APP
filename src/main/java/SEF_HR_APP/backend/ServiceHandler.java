@@ -14,7 +14,8 @@ public class ServiceHandler {
         CREATEACCOUNTSERVICE(new CreateAccountService()),
         CREATEPAYOPTIONSERVICE(new CreatePayOptionService()),
         STOREACTIVITYSERVICE(new StoreActivityService()),
-        RETRIEVEACTIVITYSERVICE(new RetrieveActivityService());
+        RETRIEVEACTIVITYSERVICE(new RetrieveActivityService()),
+        RETRIEVEUSERSERVICE(new RetrieveUserService());
 
         private ServiceTemplate service;
 
