@@ -33,7 +33,6 @@ public class MainScene extends Scene {
 	private Button menuOpt7;
 	private Button menuOpt8;
 	private Button menuOpt9;
-	private Button menuOpt10;
 	private Button logout_button;
 	private GridPane right;
 	private ScrollPane scroll;
@@ -61,7 +60,6 @@ public class MainScene extends Scene {
 		menuOpt7 = new Button("View User Activity");  //operator, supervisor
 		menuOpt8 = new Button("Request Activity\n     Information");  //employee, supervisor
 		menuOpt9 = new Button("Provide Activity\n     Information");  //employee, supervisor
-		menuOpt10 = new Button("Review Activity Data");  //operator, supervisor
 		logout_button = new Button("Logout");
 
 		//switch statement for providing user with proper commands based on access rights
@@ -72,11 +70,11 @@ public class MainScene extends Scene {
 				break;
 
 			case SUPERVISOR :
-				menuPanel.getChildren().addAll(menuOpt7, menuOpt8, menuOpt9, menuOpt10, logout_button);
+				menuPanel.getChildren().addAll(menuOpt7, menuOpt8, menuOpt9, logout_button);
 				break;
 
 			case SUPERVISOR_OPERATOR :
-				menuPanel.getChildren().addAll(menuOpt1, menuOpt2, menuOpt3, menuOpt4, menuOpt5, menuOpt6, menuOpt7, menuOpt8, menuOpt9, menuOpt10, logout_button);
+				menuPanel.getChildren().addAll(menuOpt1, menuOpt2, menuOpt3, menuOpt4, menuOpt5, menuOpt6, menuOpt7, menuOpt8, menuOpt9, logout_button);
 				break;
 
 			case EMPLOYEE :
@@ -84,7 +82,7 @@ public class MainScene extends Scene {
 				break;
 
 			case EMPLOYEE_OPERATOR :
-				menuPanel.getChildren().addAll(menuOpt1, menuOpt2, menuOpt3, menuOpt4, menuOpt5, menuOpt6, menuOpt7, menuOpt8, menuOpt9, menuOpt10, logout_button);
+				menuPanel.getChildren().addAll(menuOpt1, menuOpt2, menuOpt3, menuOpt4, menuOpt5, menuOpt6, menuOpt7, menuOpt8, menuOpt9, logout_button);
 				break;
 
 		}
@@ -100,6 +98,7 @@ public class MainScene extends Scene {
 		right = new GridPane();
 
 		menuOpt1.setOnMouseClicked(new CreateAccHandler());
+		menuOpt3.setOnMouseClicked(new ModifyAccountHandler());
 		menuOpt4.setOnMouseClicked(new AddPayOptionHandler());
 		menuOpt7.setOnMouseClicked(new ViewUserActivityHandler());
 		menuOpt8.setOnMouseClicked(new RequestActivityHandler());
@@ -194,6 +193,17 @@ public class MainScene extends Scene {
 		public void handle(MouseEvent event) {
 			split.getItems().remove(right);
 			right = new ViewUserActivityScene();
+			split.getItems().add(right);
+		}
+
+	}
+
+	private class ModifyAccountHandler implements EventHandler<MouseEvent>{
+
+		@Override
+		public void handle(MouseEvent event) {
+			split.getItems().remove(right);
+			right = new ModifyAccountScene();
 			split.getItems().add(right);
 		}
 
