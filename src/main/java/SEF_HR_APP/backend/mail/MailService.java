@@ -15,6 +15,8 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
+import SEF_HR_APP.backend.datamodels.activity.ActivityStatus;
 import SEF_HR_APP.backend.datamodels.user.User;
 
 
@@ -65,4 +67,41 @@ public class MailService {
         }
 
     }
+
+
+    
+    public static boolean sendActivityStatusMessage(User user,ActivityInformation act){
+        
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("sef.test.hrapp@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO,
+                InternetAddress.parse(user.getEmail()));
+            message.setSubject("Activity review for " + act.getMonth().getStringRepresentation());
+
+            StringBuilder sb = new StringBuilder("");
+
+            sb.append("Dear "+user.getName()+",\n");
+            sb.append("Your activity for the month "+ act.getMonth().getStringRepresentation() +" has been reviewed by "+ User.getCurrentUser().getName()+
+            " with status :" +act.getStatus().getStringRepresentation()+"\n");
+
+            if(act.getStatus() == ActivityStatus.REJECTED){
+                sb.append("Please contact your reviewer to clraify problems!\n");
+            }
+
+            sb.append("\nPlease do not reply to this email!");
+            message.setText(sb.toString());
+            Transport.send(message);
+
+            System.out.println("Mail sent!");
+            return true;
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
 }
