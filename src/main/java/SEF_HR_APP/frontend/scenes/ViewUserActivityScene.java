@@ -6,12 +6,14 @@ import java.util.Arrays;
 import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.backend.ServiceHandler.ServiceID;
 import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
+import SEF_HR_APP.backend.datamodels.activity.ActivityStatus;
 import SEF_HR_APP.backend.datamodels.activity.MonthType;
 import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import SEF_HR_APP.backend.datamodels.user.User;
 import SEF_HR_APP.frontend.popUpBoxes.AlertBoxLogIn;
 import SEF_HR_APP.interfaces.RetrieveActivityInfo;
 import SEF_HR_APP.interfaces.RetrieveActivityInfoResponse;
+import SEF_HR_APP.interfaces.SetActivityStatus;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -34,6 +36,10 @@ public class ViewUserActivityScene extends GridPane {
     private ArrayList<Text> entries;
     private ViewUserActivityScene instance;
     private User selectedUser;
+    private Label review;
+    private ComboBox<ActivityStatus> reviewBox;
+    private Button reviewBtn;
+    private ActivityInformation activity;
 
 
     public ViewUserActivityScene() {
@@ -60,9 +66,20 @@ public class ViewUserActivityScene extends GridPane {
 
         loadBtn = new Button("Load");
         loadBtn.setOnMouseClicked(new LoadUserHandler());
+        this.add(loadBtn, 2, 0,1,2);
+
+        review = new Label("Review status :");
+        reviewBox = new ComboBox<>();
+        reviewBox.getItems().addAll(Arrays.asList(ActivityStatus.values()));
+        reviewBtn = new Button("Set status");
+        reviewBtn.setOnMouseClicked(new SetReviewHandler());
+        this.add(review,0,2);
+        this.add(reviewBox,1,2);
+        this.add(reviewBtn, 2, 2);
+
         ServiceHandler.setOnSucceededHandler(ServiceID.RETRIEVEACTIVITYSERVICE,new ActivityLoadedHandler());
         ServiceHandler.setOnSucceededHandler(ServiceID.RETRIEVEUSERSERVICE, new UserLoadedHandler());
-        this.add(loadBtn, 2, 0,1,2);
+        ServiceHandler.setOnSucceededHandler(ServiceID.UPDATEREVIEWSTATUSSERVICE, new SetReviewSuccessHandler());
 
         entries = new ArrayList<>();
 
@@ -80,7 +97,7 @@ public class ViewUserActivityScene extends GridPane {
             entries.clear();
             instance.requestLayout();
 
-            ActivityInformation activity =((RetrieveActivityInfoResponse) ServiceHandler.getValues(ServiceID.RETRIEVEACTIVITYSERVICE)).getActivityInformation();
+            activity =((RetrieveActivityInfoResponse) ServiceHandler.getValues(ServiceID.RETRIEVEACTIVITYSERVICE)).getActivityInformation();
             if(activity == null){
                 AlertBoxLogIn.display("Alert", "No activity found for selected month!");
                 return;
@@ -106,6 +123,7 @@ public class ViewUserActivityScene extends GridPane {
             Text total = new Text("Total salary for " + monthBox.getSelectionModel().getSelectedItem().getStringRepresentation() + " : "+totalSalary );
             entries.add(total);
             instance.add(total, 0,instance.getRowCount(), 3, 1);
+            reviewBox.getSelectionModel().select(activity.getStatus());
         }
         
     }
@@ -142,6 +160,31 @@ public class ViewUserActivityScene extends GridPane {
             ServiceHandler.setValues(ServiceID.RETRIEVEACTIVITYSERVICE, new RetrieveActivityInfo(selectedUser, monthBox.getSelectionModel().getSelectedItem()));
             ServiceHandler.startService(ServiceID.RETRIEVEACTIVITYSERVICE);
 
+        }
+
+    }
+
+    private class SetReviewHandler implements EventHandler<MouseEvent>{
+
+        @Override
+        public void handle(MouseEvent event) {
+            activity.setStatus(reviewBox.getSelectionModel().getSelectedItem());
+            ServiceHandler.setValues(ServiceID.UPDATEREVIEWSTATUSSERVICE,new SetActivityStatus(activity,selectedUser));
+            ServiceHandler.startService(ServiceID.UPDATEREVIEWSTATUSSERVICE);
+            AlertBoxLogIn.display("Alert", "Working...");
+        }
+
+    }
+
+    private class SetReviewSuccessHandler implements EventHandler<Event>{
+
+        @Override
+        public void handle(Event event) {
+            if((boolean)ServiceHandler.getValues(ServiceID.UPDATEREVIEWSTATUSSERVICE)){
+                AlertBoxLogIn.display("Alert", "Notification sent!");
+            }else{
+                AlertBoxLogIn.display("Alert", "Operation failed!");
+            }
         }
 
     }

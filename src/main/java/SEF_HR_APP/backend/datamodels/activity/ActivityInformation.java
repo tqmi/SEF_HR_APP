@@ -11,20 +11,23 @@ public class ActivityInformation implements DBEntry{
     private MonthType month;
     private ArrayList<PayOption> options;
     private ArrayList<Integer> bookedHours;
+    private ActivityStatus status;
 
-    private static final String[] fieldNames = {"linkedUser","month"};
+    private static final String[] fieldNames = {"linkedUser","month","status"};
     private String[] fieldValues;
-    private static final String[] fieldType = {"INTEGER CONSTRAINT user_id REFERENCES Users(id)","VARCHAR(10)"};
+    private static final String[] fieldType = {"INTEGER CONSTRAINT user_id REFERENCES Users(id)","VARCHAR(10)","VARCHAR(10)"};
 
     /**
     * @param month
     */
     public ActivityInformation(MonthType month) {
         this.month = month;
+        status = ActivityStatus.PENDING;
         options = new ArrayList<>();
         bookedHours = new ArrayList<>();
-        fieldValues = new String[2];
+        fieldValues = new String[3];
         fieldValues[1] = "'"+month.getStringRepresentation()+"'";
+        fieldValues[2] = "'"+status.getStringRepresentation()+"'";
     }
 
     /**
@@ -33,6 +36,8 @@ public class ActivityInformation implements DBEntry{
     public ActivityInformation() {
     }
     
+    
+
 
     public int getOptionCount(){
         return options.size();
@@ -75,5 +80,34 @@ public class ActivityInformation implements DBEntry{
     
     public void setUser(int id){
         fieldValues[0] = ""+id;
+    }
+
+    /**
+     * @return the status
+     */
+    public ActivityStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(ActivityStatus status) {
+        this.status = status;
+        fieldValues[2] = "'"+status.getStringRepresentation()+"'";
+    }
+
+    /**
+     * @return the month
+     */
+    public MonthType getMonth() {
+        return month;
+    }
+
+    /**
+     * @param month the month to set
+     */
+    public void setMonth(MonthType month) {
+        this.month = month;
     }
 }

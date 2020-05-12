@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
 import SEF_HR_APP.backend.datamodels.activity.ActivityPayOptionLink;
+import SEF_HR_APP.backend.datamodels.activity.ActivityStatus;
 import SEF_HR_APP.backend.datamodels.activity.MonthType;
 import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import SEF_HR_APP.backend.datamodels.user.AccountType;
@@ -74,6 +75,24 @@ public class DBHandler {
     }
     
     /**
+     * Closes the db connection
+     */
+    public synchronized static void close(){
+        try{
+            DriverManager.getConnection("jdbc:derby:;shutdown=true");
+        }catch(SQLException ex){
+            if (ex.getSQLState().equals("XJ015")) {
+                System.out.println("DB shutdown normally");
+            } else {
+                ex.printStackTrace();
+            }
+        }
+
+    }
+
+
+
+    /**
      * Inserts addmin account in User table
      */
     private synchronized static void addAdminAccountToTable() {
@@ -82,7 +101,7 @@ public class DBHandler {
 
         try {
             stmt = connection.createStatement();
-            User admin = new User("admin", Position.ADMIN, "admin", Seniority.JUNIOR, 0, 0, AccountType.SUPERVISOR_OPERATOR);
+            User admin = new User("admin", Position.ADMIN, "sef.test.hrapp@gmail.com", Seniority.JUNIOR, 0, 0, AccountType.SUPERVISOR_OPERATOR);
             admin.setUsername(adminusername);
             admin.setPassword(adminpassword);
             String[] fieldNames = admin.getFieldsName();
@@ -278,11 +297,11 @@ public class DBHandler {
     }
     
     /**
-    * Searches the database for user with specified credentials
-    * @param user the username of the user
-    * @param pass the password of the user
-    * @return User object of the searched user or null if not found
-    */
+     * Searches the database for user with specified credentials
+     * @param user the username of the user
+     * @param pass the password of the user
+     * @return User object of the searched user or null if not found
+     */
     public synchronized static User getUser(String user){
 
         User findUser;
@@ -352,6 +371,49 @@ public class DBHandler {
     }
 
     /**
+     * Checks if a username is already in the db
+     * @param username username to search for
+     * @return if it is used or not
+     */
+    public synchronized static boolean isUsernameUsed(String username){
+
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM Users WHERE username='"+username+"'";  
+            System.out.println(sql.toString()+"\n");
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next())
+                return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return true;
+        }
+
+        return false;
+    }
+
+    public synchronized static int findUserID(User user){
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT id FROM Users WHERE username='"+user.getUsername()+"'"; 
+            System.out.println(sql.toString()+"\n");
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next())
+                return rs.getInt("id");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
+        return 0;
+    }
+
+
+
+
+
+    /**
      * Inserts pay option specified by newPayOption into the db
      * @param newPayOption the pay option to store
      * @return Status of operation succeeded
@@ -406,45 +468,7 @@ public class DBHandler {
         return retList;
     }
 
-    /**
-     * Checks if a username is already in the db
-     * @param username username to search for
-     * @return if it is used or not
-     */
-    public synchronized static boolean isUsernameUsed(String username){
-
-        try {
-            stmt = connection.createStatement();
-
-            String sql = "SELECT * FROM Users WHERE username='"+username+"'";  
-            System.out.println(sql.toString()+"\n");
-            ResultSet rs = stmt.executeQuery(sql);
-            if(rs.next())
-                return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return true;
-        }
-
-        return false;
-    }
-
-    public synchronized static int findUserID(User user){
-        try {
-            stmt = connection.createStatement();
-
-            String sql = "SELECT id FROM Users WHERE username='"+user.getUsername()+"'"; 
-            System.out.println(sql.toString()+"\n");
-            ResultSet rs = stmt.executeQuery(sql);
-            if(rs.next())
-                return rs.getInt("id");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return 0;
-        }
-        return 0;
-    }
-
+    
 
     /**
      * Returns activities ID
@@ -482,29 +506,51 @@ public class DBHandler {
         if(newAct == null)
             return false;
         
-        try {
-            stmt = connection.createStatement();
-            String[] fieldNames = newAct.getFieldsName();
-            StringBuilder sql = new StringBuilder("INSERT INTO Activities (");
-
-            for(int i = 0 ;i < fieldNames.length -1 ; i++){
-                sql.append(fieldNames[i] + ",");
-            }
-            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
-            String[] fields = newAct.getFieldsData();
-            for (int i = 0; i < fields.length - 1; i++) {
-                sql.append(fields[i] + ",");
-            }
-            sql.append(fields[fields.length - 1] + ")");
-            System.out.println(sql.toString()+"\n");
-            stmt.executeUpdate(sql.toString());
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return false;
-        }
 
         int actID = findActivityID(newAct);
+        if(actID == 0){
+            try {
+                stmt = connection.createStatement();
+                String[] fieldNames = newAct.getFieldsName();
+                StringBuilder sql = new StringBuilder("INSERT INTO Activities (");
+
+                for(int i = 0 ;i < fieldNames.length -1 ; i++){
+                    sql.append(fieldNames[i] + ",");
+                }
+                sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
+                String[] fields = newAct.getFieldsData();
+                for (int i = 0; i < fields.length - 1; i++) {
+                    sql.append(fields[i] + ",");
+                }
+                sql.append(fields[fields.length - 1] + ")");
+                System.out.println(sql.toString()+"\n");
+                stmt.executeUpdate(sql.toString());
+                actID = findActivityID(newAct);
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return false;
+            }
+        }else{
+            try {
+                stmt = connection.createStatement();
+                String[] fieldNames = newAct.getFieldsName();
+                String[] fields = newAct.getFieldsData();
+                StringBuilder sql = new StringBuilder("UPDATE Activities SET ");
+
+                for(int i = 0 ;i < fieldNames.length -1; i++){
+                    sql.append(fieldNames[i] + "=" + fields[i] + ",");
+                }
+                sql.append(fieldNames[fields.length - 1] + "=" + fields[fields.length - 1]+ " WHERE id = " + actID);
+                System.out.println(sql.toString()+"\n");
+                stmt.executeUpdate(sql.toString());
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return false;
+            }
+        }
+
         deleteLinks(actID);
 
         for(int j = 0 ; j < newAct.getOptionCount() ; j++){
@@ -538,21 +584,6 @@ public class DBHandler {
 
     }
 
-    private synchronized static void deleteLinks(int actID){
-        
-        try {
-            stmt = connection.createStatement();
-
-            String sql = "DELETE FROM ActToPay WHERE activity = " +actID;
-            System.out.println(sql.toString()+"\n");
-            stmt.executeUpdate(sql);
-            
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
-
 
     /**
      * Searches for an activity for a user 
@@ -570,7 +601,7 @@ public class DBHandler {
         try {
             stmt = connection.createStatement();
 
-            String sql = "SELECT B.linkedUser,B.month,C.id,C.name,C.percentage,C.basis,D.hoursBooked\n"+
+            String sql = "SELECT B.linkedUser,B.month,B.status,C.id,C.name,C.percentage,C.basis,D.hoursBooked\n"+
                          "FROM Users A,Activities B,PayOptions C, ActToPay D\n"+
                          "WHERE A.id = B.linkedUser AND D.activity = B.id AND D.payoption = C.id AND A.username = '" + user.getUsername()+"' AND B.month = '"+month.getStringRepresentation()+"'";
                          
@@ -579,6 +610,8 @@ public class DBHandler {
             while (rs.next()) {
                 if(findActivityInformation == null){
                     findActivityInformation = new ActivityInformation(MonthType.valueOf(rs.getString("month")));
+                    findActivityInformation.setStatus(ActivityStatus.valueOf(rs.getString("status")));
+                    findActivityInformation.setUser(rs.getInt("linkedUser"));
                 }
                 PayOption tmpopt = new PayOption(rs.getString("name"), rs.getDouble("percentage"),rs.getString("basis"));
                 tmpopt.setId(rs.getInt("id"));
@@ -592,21 +625,39 @@ public class DBHandler {
         }
     }
 
+    public synchronized static boolean setActivityStatus(ActivityInformation act){
+        int actID = findActivityID(act);
+        try {
+            stmt = connection.createStatement();
+            StringBuilder sql = new StringBuilder("UPDATE Activities SET status = '"+act.getStatus().getStringRepresentation() + "' WHERE id = " + actID);
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql.toString());
+            return true;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-    /**
-     * Closes the db connection
-     */
-    public synchronized static void close(){
-        try{
-            DriverManager.getConnection("jdbc:derby:;shutdown=true");
-        }catch(SQLException ex){
-            if (ex.getSQLState().equals("XJ015")) {
-                System.out.println("DB shutdown normally");
-            } else {
-                ex.printStackTrace();
-            }
+
+
+    private synchronized static void deleteLinks(int actID){
+        
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "DELETE FROM ActToPay WHERE activity = " +actID;
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql);
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
 
     }
+
+
+    
 
 }
