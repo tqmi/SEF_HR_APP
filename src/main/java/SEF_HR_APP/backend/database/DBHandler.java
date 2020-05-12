@@ -370,6 +370,29 @@ public class DBHandler {
 
     }
 
+    public synchronized static boolean updateUser(User user){
+        try {
+            stmt = connection.createStatement();
+            String[] fieldNames = user.getFieldsName();
+            String[] fields = user.getFieldsData();
+            StringBuilder sql = new StringBuilder("UPDATE Users SET ");
+
+            for(int i = 0 ;i < fieldNames.length -3 ; i++){
+                sql.append(fieldNames[i] + " = " + fields[i] + " , ");
+            }
+            sql.append(fieldNames[fieldNames.length - 3] +" = "+fields[fieldNames.length - 3] + " WHERE username = '" + user.getUsername()+"'");
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql.toString());
+            return true;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+
     /**
      * Checks if a username is already in the db
      * @param username username to search for
