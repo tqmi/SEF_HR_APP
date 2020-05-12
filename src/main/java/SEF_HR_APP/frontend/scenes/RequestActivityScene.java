@@ -91,6 +91,9 @@ public class RequestActivityScene extends GridPane {
             Text total = new Text("Total salary for " + monthBox.getSelectionModel().getSelectedItem().getStringRepresentation() + " : "+totalSalary );
             entries.add(total);
             instance.add(total, 0,instance.getRowCount(), 3, 1);
+            Text review = new Text("Review status : " + activity.getStatus().getStringRepresentation());
+            entries.add(review);
+            instance.add(review, 0,instance.getRowCount(), 3, 1);
         }
         
     }

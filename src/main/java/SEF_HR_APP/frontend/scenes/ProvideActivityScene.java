@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.backend.ServiceHandler.ServiceID;
 import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
+import SEF_HR_APP.backend.datamodels.activity.ActivityStatus;
 import SEF_HR_APP.backend.datamodels.activity.MonthType;
 import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import SEF_HR_APP.frontend.popUpBoxes.AlertBoxLogIn;
@@ -206,6 +207,7 @@ public class ProvideActivityScene extends GridPane {
             }
 
             activity.clearOptions();
+            activity.setStatus(ActivityStatus.PENDING);
 
             for(int i = 0 ; i < options.size() ; i++){
                 activity.addNewPayOption(options.get(i).getSelectionModel().getSelectedItem(), Integer.valueOf(hours.get(i).getText()));
