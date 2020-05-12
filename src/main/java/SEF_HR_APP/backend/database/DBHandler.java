@@ -101,7 +101,7 @@ public class DBHandler {
 
         try {
             stmt = connection.createStatement();
-            User admin = new User("admin", Position.ADMIN, "admin", Seniority.JUNIOR, 0, 0, AccountType.SUPERVISOR_OPERATOR);
+            User admin = new User("admin", Position.ADMIN, "sef.test.hrapp@gmail.com", Seniority.JUNIOR, 0, 0, AccountType.SUPERVISOR_OPERATOR);
             admin.setUsername(adminusername);
             admin.setPassword(adminpassword);
             String[] fieldNames = admin.getFieldsName();
@@ -611,6 +611,7 @@ public class DBHandler {
                 if(findActivityInformation == null){
                     findActivityInformation = new ActivityInformation(MonthType.valueOf(rs.getString("month")));
                     findActivityInformation.setStatus(ActivityStatus.valueOf(rs.getString("status")));
+                    findActivityInformation.setUser(rs.getInt("linkedUser"));
                 }
                 PayOption tmpopt = new PayOption(rs.getString("name"), rs.getDouble("percentage"),rs.getString("basis"));
                 tmpopt.setId(rs.getInt("id"));
@@ -621,6 +622,21 @@ public class DBHandler {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
+        }
+    }
+
+    public synchronized static boolean setActivityStatus(ActivityInformation act){
+        int actID = findActivityID(act);
+        try {
+            stmt = connection.createStatement();
+            StringBuilder sql = new StringBuilder("UPDATE Activities SET status = '"+act.getStatus().getStringRepresentation() + "' WHERE id = " + actID);
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql.toString());
+            return true;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
         }
     }
 
