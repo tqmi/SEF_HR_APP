@@ -96,4 +96,18 @@ public class ActivityInformation implements DBEntry{
         this.status = status;
         fieldValues[2] = "'"+status.getStringRepresentation()+"'";
     }
+
+    /**
+     * @return the month
+     */
+    public MonthType getMonth() {
+        return month;
+    }
+
+    /**
+     * @param month the month to set
+     */
+    public void setMonth(MonthType month) {
+        this.month = month;
+    }
 }
