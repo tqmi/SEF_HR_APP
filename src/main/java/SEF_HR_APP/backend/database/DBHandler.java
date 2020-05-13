@@ -446,7 +446,23 @@ public class DBHandler {
             return false;
         }
 
+    }
 
+    public synchronized static boolean updateRestoreUser(int id){
+
+
+        try {
+            stmt = connection.createStatement();
+            StringBuilder sql = new StringBuilder("UPDATE Users SET ");
+            sql.append("deleteStamp = null WHERE id = " + id);
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql.toString());
+            return true;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
 
     }
 

@@ -12,6 +12,7 @@ public class DeleteAccountTask extends Task<Boolean> {
     @Override
     protected Boolean call() throws Exception {
         int userID = DBHandler.findUserID(data.getUsername());
+        if(userID == 0) return false;
         return DBHandler.updateDeleteUser(userID);
     }
 
