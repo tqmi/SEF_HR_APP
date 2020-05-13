@@ -98,6 +98,7 @@ public class MainScene extends Scene {
 		right = new GridPane();
 
 		menuOpt1.setOnMouseClicked(new CreateAccHandler());
+		menuOpt2.setOnMouseClicked(new DeleteAccountHandler());
 		menuOpt3.setOnMouseClicked(new ModifyAccountHandler());
 		menuOpt4.setOnMouseClicked(new AddPayOptionHandler());
 		menuOpt7.setOnMouseClicked(new ViewUserActivityHandler());
@@ -209,4 +210,15 @@ public class MainScene extends Scene {
 
 	}
 
+
+	private class DeleteAccountHandler implements EventHandler<MouseEvent> {
+
+		@Override
+		public void handle(MouseEvent event)
+		{
+			split.getItems().remove(right);
+			right = new DeleteAccountScene();
+			split.getItems().add(right);
+		}
+	}
 }
