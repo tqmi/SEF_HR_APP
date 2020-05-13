@@ -3,6 +3,7 @@ package SEF_HR_APP.frontend.scenes;
 import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.backend.ServiceHandler.ServiceID;
 import SEF_HR_APP.frontend.popUpBoxes.AlertBoxLogIn;
+import SEF_HR_APP.interfaces.DeleteAccountInterface;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -47,7 +48,7 @@ public class DeleteAccountScene extends GridPane {
         @Override
         public void handle(MouseEvent event) {
             
-            ServiceHandler.setValues(ServiceID.DELETEACCOUNTSERVICE, userbox.getText());
+            ServiceHandler.setValues(ServiceID.DELETEACCOUNTSERVICE, new DeleteAccountInterface(userbox.getText()));
             ServiceHandler.startService(ServiceID.DELETEACCOUNTSERVICE);
             AlertBoxLogIn.display("Alert", "Loading...");
         }
