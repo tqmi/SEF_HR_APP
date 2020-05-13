@@ -1,7 +1,6 @@
 package SEF_HR_APP.backend.services;
 
 import SEF_HR_APP.backend.ServiceTemplate;
-import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
 import SEF_HR_APP.backend.tasks.RetrieveActivityTask;
 import SEF_HR_APP.interfaces.RetrieveActivityInfo;
 import SEF_HR_APP.interfaces.RetrieveActivityInfoResponse;

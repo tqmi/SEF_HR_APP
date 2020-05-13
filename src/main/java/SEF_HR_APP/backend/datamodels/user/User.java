@@ -53,8 +53,6 @@ public class User implements DBEntry{
         fieldValues[4] = String.valueOf(salary);
         fieldValues[5] = String.valueOf(leaveDays);
         fieldValues[6] = "'"+accountType.getStringRepresentation()+"'";
-        
-        
     }
 
     public User(){
@@ -75,9 +73,12 @@ public class User implements DBEntry{
         return fieldType;
     }
 
-    public void setCurrentUser(){
-        currentUser = this;
-    }   
+    /**
+     * @return the leaveDays
+     */
+    public int getLeaveDays() {
+        return leaveDays;
+    }  
 
     public static void resetCurrentUser(){
         currentUser = null;
@@ -92,6 +93,45 @@ public class User implements DBEntry{
      */
     public String getUsername() {
         return username;
+    }
+
+    /** 
+     * @return accountType
+     */
+    public AccountType getaccountType() {
+        return accountType;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    public double getSalary(){
+        return this.salary;
+    }
+
+    /**
+     * @return the position
+     */
+    public Position getPosition() {
+        return position;
+    }
+
+    /**
+     * @return the seniority
+     */
+    public Seniority getSeniority() {
+        return seniority;
     }
 
     /**
@@ -115,32 +155,12 @@ public class User implements DBEntry{
         fieldValues[8] = "'"+password+"'";    
     }
 
-      /** 
-     * @return accountType
-    */
-    public AccountType getaccountType() {
-        return accountType;
-    }
-
     /**
      * @param accountType
      */
-    public void setaccountType() {
+    public void setaccountType(AccountType accountType) {
         this.accountType = accountType;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return the email
-     */
-    public String getEmail() {
-        return email;
+        fieldValues[6] = "'"+accountType.getStringRepresentation()+"'";
     }
 
     /**
@@ -148,11 +168,44 @@ public class User implements DBEntry{
      */
     public void setEmail(String email) {
         this.email = email;
+        fieldValues[2] = "'"+email+"'";
     }
 
-    public double getSalary(){
-        return this.salary;
+    /**
+     * @param position the position to set
+     */
+    public void setPosition(Position position) {
+        this.position = position;
+        fieldValues[1] = "'" + position.getStringRepresentation() + "'";
+    }
+
+    /**
+     * @param seniority the seniority to set
+     */
+    public void setSeniority(Seniority seniority) {
+        this.seniority = seniority;
+        fieldValues[3] = "'"+seniority.getStringRepresentation()+"'";
+    }
+
+    /**
+     * @param leaveDays the leaveDays to set
+     */
+    public void setLeaveDays(int leaveDays) {
+        this.leaveDays = leaveDays;
+        fieldValues[5] = String.valueOf(leaveDays);
     }
     
+    public void setName(String name){
+        this.name = name;
+        fieldValues[0] = "'" + name + "'";
+    }
 
+    public void setSalary(double salary){
+        this.salary = salary;
+        fieldValues[4] = String.valueOf(salary);
+    }
+
+    public void setCurrentUser(){
+        currentUser = this;
+    }
 }
