@@ -316,6 +316,9 @@ public class DBHandler {
             if (rs.next()) {
                 if (user.equals(rs.getString("username")) && pass.equals(rs.getString("password"))) {
 
+                    if(rs.getTimestamp("deleteStamp") != null)
+                        return null;
+
                     User dummy = new User();
                     String[] fieldNames = dummy.getFieldsName();
                     findUser = new User(rs.getString(fieldNames[0]), Position.valueOf(rs.getString(fieldNames[1])),
