@@ -60,9 +60,12 @@ public class DeleteAccountScene extends GridPane {
         @Override
         public void handle(MouseEvent event) {
             
-            ServiceHandler.setValues(ServiceID.DELETEACCOUNTSERVICE, new DeleteAccountInterface(userbox.getText()));
-            ServiceHandler.startService(ServiceID.DELETEACCOUNTSERVICE);
-            AlertBoxLogIn.display("Alert", "Loading...");
+            if(TEMPConfirmBox.display("Attention", "Are you sure you want to delete this account?"))
+            {
+                ServiceHandler.setValues(ServiceID.DELETEACCOUNTSERVICE, new DeleteAccountInterface(userbox.getText()));
+                ServiceHandler.startService(ServiceID.DELETEACCOUNTSERVICE);
+                AlertBoxLogIn.display("Alert", "Loading...");
+            }
         }
 
     }
@@ -72,14 +75,11 @@ public class DeleteAccountScene extends GridPane {
         @Override
         public void handle(Event event)
         {
-            if(TEMPConfirmBox.display("Attention", "Are you sure you want to delete this account?"))
-            {
-                if((boolean) ServiceHandler.getValues(ServiceID.DELETEACCOUNTSERVICE)){
-                     AlertBoxLogIn.display("Alert", "Account successfully deleted!");
-                }
-                else{
-                    AlertBoxLogIn.display("Alert", "Account deletion failed!");
-                }
+            if((boolean) ServiceHandler.getValues(ServiceID.DELETEACCOUNTSERVICE)){
+                    AlertBoxLogIn.display("Alert", "Account successfully deleted!");
+            }
+            else{
+                AlertBoxLogIn.display("Alert", "Account deletion failed!");
             }
         }
     }
