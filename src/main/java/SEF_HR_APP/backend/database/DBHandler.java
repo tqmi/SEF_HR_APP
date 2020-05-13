@@ -88,8 +88,33 @@ public class DBHandler {
             stmt.executeUpdate(sql.toString());
         }
 
+        sql = new StringBuilder("");
+        sql.append("SELECT * FROM Activities");
+        System.out.println(sql.toString() + "\n");    
+        rs = stmt.executeQuery(sql.toString());
+        
+        ArrayList<Integer> deleteActId = new ArrayList<>();
+
+        while(rs.next()){
+
+            MonthType mt = MonthType.valueOf(rs.getString("month"));
+            if(mt.monthDifferenceToCurrent() >= 6){
+                deleteActId.add(rs.getInt("id"));
+            }
+        }
+
+        for(int id : deleteActId){
+            sql = new StringBuilder("");
+            sql.append("DELETE FROM Activities WHERE id = " + id);
+            System.out.println(sql.toString() + "\n");  
+            stmt.executeUpdate(sql.toString());
+        }
+
+
 
     }
+
+
 
     /**
      * Creates the database with all its tables
