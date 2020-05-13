@@ -15,7 +15,7 @@ public class ActivityInformation implements DBEntry{
 
     private static final String[] fieldNames = {"linkedUser","month","status"};
     private String[] fieldValues;
-    private static final String[] fieldType = {"INTEGER CONSTRAINT user_id REFERENCES Users(id)","VARCHAR(10)","VARCHAR(10)"};
+    private static final String[] fieldType = {"INTEGER CONSTRAINT user_id REFERENCES Users(id) ON DELETE CASCADE","VARCHAR(10)","VARCHAR(10)"};
 
     /**
     * @param month

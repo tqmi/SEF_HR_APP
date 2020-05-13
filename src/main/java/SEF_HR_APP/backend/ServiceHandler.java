@@ -18,7 +18,8 @@ public class ServiceHandler {
         RETRIEVEUSERSERVICE(new RetrieveUserService()),
         UPDATEREVIEWSTATUSSERVICE(new UpdateReviewStatusService()),
         UPDATEUSERSERVICE(new UpdateUserService()),
-        DELETEACCOUNTSERVICE(new DeleteAccountService());
+        DELETEACCOUNTSERVICE(new DeleteAccountService()),
+        RESTOREACCOUNTSERVICE(new RestoreAccountService());
 
         private ServiceTemplate service;
 
