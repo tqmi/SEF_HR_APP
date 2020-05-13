@@ -11,7 +11,7 @@ public class ActivityPayOptionLink implements DBEntry{
 
     private static final String[] fieldNames = {"activity","payoption","hoursBooked"};
     private String[] fieldValues;
-    private static final String[] fieldType = {"INTEGER CONSTRAINT activity_id REFERENCES Activities(id)","INTEGER CONSTRAINT payoption_id REFERENCES PayOptions(id)","INTEGER"};
+    private static final String[] fieldType = {"INTEGER CONSTRAINT activity_id REFERENCES Activities(id) ON DELETE CASCADE","INTEGER CONSTRAINT payoption_id REFERENCES PayOptions(id)","INTEGER"};
 
 
     @Override

@@ -1,5 +1,7 @@
 package SEF_HR_APP.backend.datamodels.user;
 
+import java.sql.Timestamp;
+
 import SEF_HR_APP.backend.database.DBEntry;
 import SEF_HR_APP.backend.security.Hasher;
 
@@ -16,9 +18,11 @@ public class User implements DBEntry{
     private AccountType accountType;
     private String username;
     private String password;
-    private static final String[] fieldNames = {"name","position","email","seniority","salary","leaveDays","accountType","username","password"};
+    private Timestamp deleteStamp;
+
+    private static final String[] fieldNames = {"name","position","email","seniority","salary","leaveDays","accountType","deleteStamp","username","password"};
     private String[] fieldValues;
-    private static final String[] fieldType = {"VARCHAR(255)","VARCHAR(255)","VARCHAR(255)","VARCHAR(255)","DECIMAL(10,3)","INTEGER","VARCHAR(255)","VARCHAR(255) UNIQUE","VARCHAR(255)"};
+    private static final String[] fieldType = {"VARCHAR(255)","VARCHAR(255)","VARCHAR(255)","VARCHAR(255)","DECIMAL(10,3)","INTEGER","VARCHAR(255)","TIMESTAMP","VARCHAR(255) UNIQUE","VARCHAR(255)"};
 
 
     
@@ -41,7 +45,7 @@ public class User implements DBEntry{
         this.salary = salary;
         this.leaveDays = leaveDays;
         this.accountType = accountType;
-        fieldValues = new String[9];
+        fieldValues = new String[10];
         setFieldValues();
     }
 
@@ -53,6 +57,7 @@ public class User implements DBEntry{
         fieldValues[4] = String.valueOf(salary);
         fieldValues[5] = String.valueOf(leaveDays);
         fieldValues[6] = "'"+accountType.getStringRepresentation()+"'";
+        fieldValues[7] = null;
     }
 
     public User(){
@@ -139,7 +144,7 @@ public class User implements DBEntry{
      */
     public void setUsername(String username) {
         this.username = username;
-        fieldValues[7] = "'"+username+"'";
+        fieldValues[8] = "'"+username+"'";
     }
 
     /**
@@ -147,12 +152,12 @@ public class User implements DBEntry{
      */
     public void setPassword(String password) {
         this.password = Hasher.getSHA256(username+password);
-        fieldValues[8] = "'"+this.password+"'";
+        fieldValues[9] = "'"+this.password+"'";
     }
 
     public void setPasswordSHA(String password){
         this.password = password;
-        fieldValues[8] = "'"+password+"'";    
+        fieldValues[9] = "'"+password+"'";    
     }
 
     /**

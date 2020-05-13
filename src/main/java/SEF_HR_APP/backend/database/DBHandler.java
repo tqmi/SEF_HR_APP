@@ -7,7 +7,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Scanner;
 
 import SEF_HR_APP.backend.datamodels.activity.ActivityInformation;
@@ -22,6 +24,7 @@ import SEF_HR_APP.backend.datamodels.user.User;
 
 public class DBHandler {
 
+    private static final long millis2days = 172800000;
     private static final String dbURL = "jdbc:derby:./db/MyDB;";
     private static final String adminFile = "./setup/admin.stp";
     private static String adminusername;
@@ -30,9 +33,9 @@ public class DBHandler {
     private static Connection connection;
     private static Statement stmt;
 
-
     /**
      * Initialize database connection or create new database if it not exists
+     * 
      * @return
      */
     public synchronized static boolean connectDB() {
@@ -40,7 +43,9 @@ public class DBHandler {
         try {
             System.out.println("Connecting to db ...");
             connection = DriverManager.getConnection(dbURL);
-            System.out.println("Connection successful!");
+            System.out.println("Connection successful!Clearing DB...");
+            clearDB();
+            System.out.println("DB cleared!");
             return true;
         } catch (SQLException e) {
             try {
@@ -56,8 +61,64 @@ public class DBHandler {
 
     }
 
+    private synchronized static void clearDB() throws SQLException{
+        stmt = connection.createStatement();
+        StringBuilder sql = new StringBuilder("");
+        ArrayList<Integer> deleteId = new ArrayList<>();
+
+        sql.append("SELECT * FROM Users WHERE deleteStamp IS NOT NULL");
+        System.out.println(sql.toString() + "\n");    
+        ResultSet rs = stmt.executeQuery(sql.toString());
+        
+        long currentMillis = System.currentTimeMillis();
+        
+        while(rs.next()){
+
+            Timestamp ts = rs.getTimestamp("deleteStamp");
+
+            if(currentMillis - ts.getTime() > millis2days){
+                deleteId.add(rs.getInt("id"));
+            }
+        }
+        
+        for(int id : deleteId){
+            sql = new StringBuilder("");
+            sql.append("DELETE FROM Users WHERE id = " + id);
+            System.out.println(sql.toString() + "\n");  
+            stmt.executeUpdate(sql.toString());
+        }
+
+        sql = new StringBuilder("");
+        sql.append("SELECT * FROM Activities");
+        System.out.println(sql.toString() + "\n");    
+        rs = stmt.executeQuery(sql.toString());
+        
+        ArrayList<Integer> deleteActId = new ArrayList<>();
+
+        while(rs.next()){
+
+            MonthType mt = MonthType.valueOf(rs.getString("month"));
+            if(mt.monthDifferenceToCurrent() >= 6){
+                deleteActId.add(rs.getInt("id"));
+            }
+        }
+
+        for(int id : deleteActId){
+            sql = new StringBuilder("");
+            sql.append("DELETE FROM Activities WHERE id = " + id);
+            System.out.println(sql.toString() + "\n");  
+            stmt.executeUpdate(sql.toString());
+        }
+
+
+
+    }
+
+
+
     /**
      * Creates the database with all its tables
+     * 
      * @throws SQLException
      */
     private synchronized static void createDB() throws SQLException {
@@ -73,14 +134,14 @@ public class DBHandler {
         System.out.println("Link table added! Adding admin account ...");
         addAdminAccountToTable();
     }
-    
+
     /**
      * Closes the db connection
      */
-    public synchronized static void close(){
-        try{
+    public synchronized static void close() {
+        try {
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             if (ex.getSQLState().equals("XJ015")) {
                 System.out.println("DB shutdown normally");
             } else {
@@ -89,8 +150,6 @@ public class DBHandler {
         }
 
     }
-
-
 
     /**
      * Inserts addmin account in User table
@@ -101,22 +160,23 @@ public class DBHandler {
 
         try {
             stmt = connection.createStatement();
-            User admin = new User("admin", Position.ADMIN, "sef.test.hrapp@gmail.com", Seniority.JUNIOR, 0, 0, AccountType.SUPERVISOR_OPERATOR);
+            User admin = new User("admin", Position.ADMIN, "sef.test.hrapp@gmail.com", Seniority.JUNIOR, 0, 0,
+                    AccountType.SUPERVISOR_OPERATOR);
             admin.setUsername(adminusername);
             admin.setPassword(adminpassword);
             String[] fieldNames = admin.getFieldsName();
             StringBuilder sql = new StringBuilder("INSERT INTO Users (");
 
-            for(int i = 0 ;i < fieldNames.length -1 ; i++){
+            for (int i = 0; i < fieldNames.length - 1; i++) {
                 sql.append(fieldNames[i] + ",");
             }
-            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
+            sql.append(fieldNames[fieldNames.length - 1] + ") VALUES (");
             String[] fields = admin.getFieldsData();
             for (int i = 0; i < fields.length - 1; i++) {
                 sql.append(fields[i] + ",");
             }
             sql.append(fields[fields.length - 1] + ")");
-            System.out.println(sql.toString()+"\n");
+            System.out.println(sql.toString() + "\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -127,31 +187,32 @@ public class DBHandler {
     }
 
     /**
-     * Checks if there exists a setup file for admin account credentials and loads them
+     * Checks if there exists a setup file for admin account credentials and loads
+     * them
      */
     private synchronized static void readAdminAccountDetails() {
         try {
             Scanner sc = new Scanner(new FileInputStream(adminFile));
-            if(sc.hasNext())
+            if (sc.hasNext())
                 adminusername = sc.next();
-            if(sc.hasNext())
+            if (sc.hasNext())
                 adminpassword = sc.next();
 
-            if(adminusername == null || adminpassword == null)
+            if (adminusername == null || adminpassword == null)
                 adminUseDefaults();
             return;
-        
+
         } catch (FileNotFoundException e) {
             adminUseDefaults();
             return;
         }
-        
+
     }
 
     /**
      * Set defaults for admin credentials
      */
-    private synchronized static void adminUseDefaults(){
+    private synchronized static void adminUseDefaults() {
         adminusername = "admin";
         adminpassword = "admin";
     }
@@ -162,18 +223,19 @@ public class DBHandler {
     private synchronized static void createUserTable() {
         try {
             stmt = connection.createStatement();
-            
-            StringBuilder sql = new StringBuilder( "CREATE TABLE Users (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
+
+            StringBuilder sql = new StringBuilder(
+                    "CREATE TABLE Users (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
             User dummy = new User();
             String[] fieldTypes = dummy.getFieldsType();
             String[] fieldNames = dummy.getFieldsName();
 
-            for(int i = 0 ; i < fieldNames.length ; i++){
-                sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
+            for (int i = 0; i < fieldNames.length; i++) {
+                sql.append("," + fieldNames[i] + " " + fieldTypes[i] + "\n");
             }
-            sql.append(")"); 
+            sql.append(")");
 
-            System.out.println(sql.toString()+"\n");
+            System.out.println(sql.toString() + "\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,18 +248,19 @@ public class DBHandler {
     private synchronized static void createPayOptionTable() {
         try {
             stmt = connection.createStatement();
-            
-            StringBuilder sql = new StringBuilder( "CREATE TABLE PayOptions (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
+
+            StringBuilder sql = new StringBuilder(
+                    "CREATE TABLE PayOptions (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
             PayOption dummy = new PayOption();
             String[] fieldTypes = dummy.getFieldsType();
             String[] fieldNames = dummy.getFieldsName();
 
-            for(int i = 0 ; i < fieldNames.length ; i++){
-                sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
+            for (int i = 0; i < fieldNames.length; i++) {
+                sql.append("," + fieldNames[i] + " " + fieldTypes[i] + "\n");
             }
-            sql.append(")"); 
+            sql.append(")");
 
-            System.out.println(sql.toString()+"\n");
+            System.out.println(sql.toString() + "\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -210,18 +273,19 @@ public class DBHandler {
     private static void createActivityInformationTable() {
         try {
             stmt = connection.createStatement();
-            
-            StringBuilder sql = new StringBuilder( "CREATE TABLE Activities (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
+
+            StringBuilder sql = new StringBuilder(
+                    "CREATE TABLE Activities (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
             ActivityInformation dummy = new ActivityInformation();
             String[] fieldTypes = dummy.getFieldsType();
             String[] fieldNames = dummy.getFieldsName();
 
-            for(int i = 0 ; i < fieldNames.length ; i++){
-                sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
+            for (int i = 0; i < fieldNames.length; i++) {
+                sql.append("," + fieldNames[i] + " " + fieldTypes[i] + "\n");
             }
-            sql.append(")"); 
+            sql.append(")");
 
-            System.out.println(sql.toString()+"\n");
+            System.out.println(sql.toString() + "\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -229,23 +293,25 @@ public class DBHandler {
     }
 
     /**
-     * Create link table for n to n connection between activity and pay options tables
+     * Create link table for n to n connection between activity and pay options
+     * tables
      */
     private static void createLinkTable() {
         try {
             stmt = connection.createStatement();
-            
-            StringBuilder sql = new StringBuilder( "CREATE TABLE ActToPay (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
+
+            StringBuilder sql = new StringBuilder(
+                    "CREATE TABLE ActToPay (\nid INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1) PRIMARY KEY\n");
             ActivityPayOptionLink dummy = new ActivityPayOptionLink();
             String[] fieldTypes = dummy.getFieldsType();
             String[] fieldNames = dummy.getFieldsName();
 
-            for(int i = 0 ; i < fieldNames.length ; i++){
-                sql.append(","+fieldNames[i] + " " + fieldTypes[i] +"\n");
+            for (int i = 0; i < fieldNames.length; i++) {
+                sql.append("," + fieldNames[i] + " " + fieldTypes[i] + "\n");
             }
-            sql.append(")"); 
+            sql.append(")");
 
-            System.out.println(sql.toString()+"\n");
+            System.out.println(sql.toString() + "\n");
             stmt.executeUpdate(sql.toString());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -254,35 +320,36 @@ public class DBHandler {
 
     /**
      * Searches the database for user with specified credentials
+     * 
      * @param user the username of the user
      * @param pass the password of the user
      * @return User object of the searched user or null if not found
      */
-    public synchronized static User findUser(String user,String pass){
+    public synchronized static User findUser(String user, String pass) {
 
         User findUser;
 
-        if(user == null || pass == null)
+        if (user == null || pass == null)
             return null;
 
         try {
             stmt = connection.createStatement();
 
-            String sql = "SELECT * FROM Users WHERE username = '"+user+"' AND password = '"+pass+"'";
-            System.out.println(sql.toString()+"\n");
+            String sql = "SELECT * FROM Users WHERE username = '" + user + "' AND password = '" + pass + "'";
+            System.out.println(sql.toString() + "\n");
             ResultSet rs = stmt.executeQuery(sql);
-            if(rs.next()) {
-                if (user.equals(rs.getString("username")) && pass.equals(rs.getString("password"))){
-                    
+            if (rs.next()) {
+                if (user.equals(rs.getString("username")) && pass.equals(rs.getString("password"))) {
+
+                    if(rs.getTimestamp("deleteStamp") != null)
+                        return null;
+
                     User dummy = new User();
                     String[] fieldNames = dummy.getFieldsName();
-                    findUser = new User(rs.getString(fieldNames[0]),
-                                        Position.valueOf(rs.getString(fieldNames[1])),
-                                        rs.getString(fieldNames[2]),
-                                        Seniority.valueOf(rs.getString(fieldNames[3])),
-                                        rs.getDouble(fieldNames[4]),
-                                        rs.getInt(fieldNames[5]),
-                                        AccountType.valueOf(rs.getString(fieldNames[6])));
+                    findUser = new User(rs.getString(fieldNames[0]), Position.valueOf(rs.getString(fieldNames[1])),
+                            rs.getString(fieldNames[2]), Seniority.valueOf(rs.getString(fieldNames[3])),
+                            rs.getDouble(fieldNames[4]), rs.getInt(fieldNames[5]),
+                            AccountType.valueOf(rs.getString(fieldNames[6])));
                     findUser.setUsername(rs.getString(fieldNames[7]));
                     findUser.setPasswordSHA(rs.getString(fieldNames[8]));
                     return findUser;
@@ -295,40 +362,37 @@ public class DBHandler {
             return null;
         }
     }
-    
+
     /**
      * Searches the database for user with specified credentials
+     * 
      * @param user the username of the user
      * @param pass the password of the user
      * @return User object of the searched user or null if not found
      */
-    public synchronized static User getUser(String user){
+    public synchronized static User getUser(String user) {
 
         User findUser;
 
-        if(user == null)
+        if (user == null)
             return null;
 
         try {
             stmt = connection.createStatement();
 
             String sql = "SELECT * FROM Users WHERE username = '" + user + "'";
-            System.out.println(sql.toString()+"\n");
+            System.out.println(sql.toString() + "\n");
             ResultSet rs = stmt.executeQuery(sql);
-            if(rs.next()) {
+            if (rs.next()) {
                 User dummy = new User();
                 String[] fieldNames = dummy.getFieldsName();
-                findUser = new User(rs.getString(fieldNames[0]),
-                                    Position.valueOf(rs.getString(fieldNames[1])),
-                                    rs.getString(fieldNames[2]),
-                                    Seniority.valueOf(rs.getString(fieldNames[3])),
-                                    rs.getDouble(fieldNames[4]),
-                                    rs.getInt(fieldNames[5]),
-                                    AccountType.valueOf(rs.getString(fieldNames[6])));
-                findUser.setUsername(rs.getString(fieldNames[7]));
+                findUser = new User(rs.getString(fieldNames[0]), Position.valueOf(rs.getString(fieldNames[1])),
+                        rs.getString(fieldNames[2]), Seniority.valueOf(rs.getString(fieldNames[3])),
+                        rs.getDouble(fieldNames[4]), rs.getInt(fieldNames[5]),
+                        AccountType.valueOf(rs.getString(fieldNames[6])));
+                findUser.setUsername(rs.getString(fieldNames[8]));
                 return findUser;
             }
-            
 
             return null;
         } catch (SQLException e) {
@@ -336,30 +400,29 @@ public class DBHandler {
             return null;
         }
     }
-    
-
 
     /**
      * Inserts user specified by newUser into the db
+     * 
      * @param newUser the user to store
      * @return Status of operation succeeded
      */
-    public synchronized static boolean insertUserIntoTable(User newUser){
+    public synchronized static boolean insertUserIntoTable(User newUser) {
         try {
             stmt = connection.createStatement();
             String[] fieldNames = newUser.getFieldsName();
             StringBuilder sql = new StringBuilder("INSERT INTO Users (");
 
-            for(int i = 0 ;i < fieldNames.length -1 ; i++){
+            for (int i = 0; i < fieldNames.length - 1; i++) {
                 sql.append(fieldNames[i] + ",");
             }
-            sql.append(fieldNames[fieldNames.length-1] + ") VALUES (");
+            sql.append(fieldNames[fieldNames.length - 1] + ") VALUES (");
             String[] fields = newUser.getFieldsData();
             for (int i = 0; i < fields.length - 1; i++) {
                 sql.append(fields[i] + ",");
             }
             sql.append(fields[fields.length - 1] + ")");
-            System.out.println(sql.toString()+"\n");
+            System.out.println(sql.toString() + "\n");
             stmt.executeUpdate(sql.toString());
             return true;
         } catch (SQLException e) {
@@ -370,17 +433,38 @@ public class DBHandler {
 
     }
 
-    public synchronized static boolean updateUser(User user){
+    public synchronized static boolean updateUser(User user) {
         try {
             stmt = connection.createStatement();
             String[] fieldNames = user.getFieldsName();
             String[] fields = user.getFieldsData();
             StringBuilder sql = new StringBuilder("UPDATE Users SET ");
 
-            for(int i = 0 ;i < fieldNames.length -3 ; i++){
+            for (int i = 0; i < fieldNames.length - 3; i++) {
                 sql.append(fieldNames[i] + " = " + fields[i] + " , ");
             }
-            sql.append(fieldNames[fieldNames.length - 3] +" = "+fields[fieldNames.length - 3] + " WHERE username = '" + user.getUsername()+"'");
+            sql.append(fieldNames[fieldNames.length - 3] + " = " + fields[fieldNames.length - 3] + " WHERE username = '"
+                    + user.getUsername() + "'");
+            System.out.println(sql.toString() + "\n");
+            stmt.executeUpdate(sql.toString());
+            return true;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public synchronized static boolean updateDeleteUser(int id){
+
+
+        try {
+            stmt = connection.createStatement();
+            Timestamp ts = new Timestamp(Calendar.getInstance().getTime().getTime());
+            ts.setNanos(0);
+            StringBuilder sql = new StringBuilder("UPDATE Users SET ");
+            sql.append("deleteStamp = '"+ ts.toString() +"' WHERE id = " + id);
             System.out.println(sql.toString()+"\n");
             stmt.executeUpdate(sql.toString());
             return true;
@@ -392,6 +476,23 @@ public class DBHandler {
 
     }
 
+    public synchronized static boolean updateRestoreUser(int id){
+
+
+        try {
+            stmt = connection.createStatement();
+            StringBuilder sql = new StringBuilder("UPDATE Users SET ");
+            sql.append("deleteStamp = null WHERE id = " + id);
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql.toString());
+            return true;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+
+    }
 
     /**
      * Checks if a username is already in the db
@@ -432,6 +533,21 @@ public class DBHandler {
         return 0;
     }
 
+    public synchronized static int findUserID(String user){
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT id FROM Users WHERE username='"+user+"'"; 
+            System.out.println(sql.toString()+"\n");
+            ResultSet rs = stmt.executeQuery(sql);
+            if(rs.next())
+                return rs.getInt("id");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return 0;
+        }
+        return 0;
+    }
 
 
 
