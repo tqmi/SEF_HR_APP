@@ -1,14 +1,17 @@
 package SEF_HR_APP.backend.services;
 
 import SEF_HR_APP.backend.ServiceTemplate;
+import SEF_HR_APP.backend.tasks.DeletePayOptionTask;
 import javafx.concurrent.Task;
 
 public class DeletePayOptionService extends ServiceTemplate<String, Boolean> {
 
+
+    private String data;
+
     @Override
     public void setValues(String value) {
-        // TODO Auto-generated method stub
-
+        data = value;
     }
 
     @Override
@@ -18,8 +21,7 @@ public class DeletePayOptionService extends ServiceTemplate<String, Boolean> {
 
     @Override
     protected Task<Boolean> createTask() {
-        // TODO Auto-generated method stub
-        return null;
+        return new DeletePayOptionTask(data);
     }
     
 }

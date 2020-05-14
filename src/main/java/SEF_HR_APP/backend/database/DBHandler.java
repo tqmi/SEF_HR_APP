@@ -110,7 +110,31 @@ public class DBHandler {
             stmt.executeUpdate(sql.toString());
         }
 
+        sql = new StringBuilder("");
+        sql.append("SELECT id FROM PayOptions WHERE deleteStatus = 1");
+        System.out.println(sql.toString() + "\n");    
+        rs = stmt.executeQuery(sql.toString());
 
+        ArrayList<Integer> deleteOptId = new ArrayList<>();
+        while(rs.next()){
+
+            StringBuilder sql2 = new StringBuilder();
+            sql2.append("SELECT id from ActToPay WHERE payoption = "+ rs.getInt("id"));
+            System.out.println(sql2.toString() + "\n");    
+            ResultSet rs2 = stmt.executeQuery(sql2.toString());
+
+            if(!rs2.next()){
+                deleteOptId.add(rs.getInt("id"));
+            }
+
+        }
+
+        for(int id : deleteOptId){
+            sql = new StringBuilder("");
+            sql.append("DELETE FROM PayOptions WHERE id = " + id);
+            System.out.println(sql.toString() + "\n");  
+            stmt.executeUpdate(sql.toString());
+        }
 
     }
 
@@ -594,9 +618,11 @@ public class DBHandler {
             ResultSet rs = stmt.executeQuery(sql);  
 
             while(rs.next()){
-                PayOption tmp = new PayOption(rs.getString("name"),rs.getDouble("percentage"),rs.getString("basis"));
-                tmp.setId(rs.getInt("id"));
-                retList.add(tmp);
+                if(rs.getInt("deleteStatus") == 0){
+                    PayOption tmp = new PayOption(rs.getString("name"),rs.getDouble("percentage"),rs.getString("basis"));
+                    tmp.setId(rs.getInt("id"));
+                    retList.add(tmp);
+                }
             }
 
         } catch (SQLException e) {
@@ -607,7 +633,26 @@ public class DBHandler {
         return retList;
     }
 
-    
+    public synchronized static boolean setPayOptionDeleteStatus(String name){
+
+        try{
+            stmt = connection.createStatement();
+            StringBuilder sql = new StringBuilder("");
+
+            sql.append("UPDATE PayOptions SET ");
+            sql.append("deleteStatus = 1 ");
+            sql.append("WHERE name = '"+name+"'");
+
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql.toString());
+            return true;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
 
     /**
      * Returns activities ID
