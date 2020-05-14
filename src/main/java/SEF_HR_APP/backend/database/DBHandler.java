@@ -44,7 +44,12 @@ public class DBHandler {
             System.out.println("Connecting to db ...");
             connection = DriverManager.getConnection(dbURL);
             System.out.println("Connection successful!Clearing DB...");
-            clearDB();
+            try{
+                clearDB();
+            }catch(SQLException e){
+                e.printStackTrace();
+                return false;
+            }
             System.out.println("DB cleared!");
             return true;
         } catch (SQLException e) {
@@ -110,7 +115,30 @@ public class DBHandler {
             stmt.executeUpdate(sql.toString());
         }
 
+        sql = new StringBuilder("");
+        sql.append("SELECT id FROM PayOptions WHERE deleteStatus = 1");
+        System.out.println(sql.toString() + "\n");    
+        rs = stmt.executeQuery(sql.toString());
 
+        ArrayList<Integer> deleteOptId = new ArrayList<>();
+        while(rs.next()){
+            deleteOptId.add(rs.getInt("id"));
+        }
+
+
+        for(int id : deleteOptId){
+
+            sql = new StringBuilder("");
+            sql.append("SELECT id from ActToPay WHERE payoption = "+ id);
+            System.out.println(sql.toString() + "\n");    
+            rs = stmt.executeQuery(sql.toString());
+            if(!rs.next()){
+                sql = new StringBuilder("");
+                sql.append("DELETE FROM PayOptions WHERE id = " + id);
+                System.out.println(sql.toString() + "\n");  
+                stmt.executeUpdate(sql.toString());
+            }
+        }
 
     }
 
@@ -350,8 +378,8 @@ public class DBHandler {
                             rs.getString(fieldNames[2]), Seniority.valueOf(rs.getString(fieldNames[3])),
                             rs.getDouble(fieldNames[4]), rs.getInt(fieldNames[5]),
                             AccountType.valueOf(rs.getString(fieldNames[6])));
-                    findUser.setUsername(rs.getString(fieldNames[7]));
-                    findUser.setPasswordSHA(rs.getString(fieldNames[8]));
+                    findUser.setUsername(rs.getString(fieldNames[8]));
+                    findUser.setPasswordSHA(rs.getString(fieldNames[9]));
                     return findUser;
                 }
             }
@@ -594,9 +622,11 @@ public class DBHandler {
             ResultSet rs = stmt.executeQuery(sql);  
 
             while(rs.next()){
-                PayOption tmp = new PayOption(rs.getString("name"),rs.getDouble("percentage"),rs.getString("basis"));
-                tmp.setId(rs.getInt("id"));
-                retList.add(tmp);
+                if(rs.getInt("deleteStatus") == 0){
+                    PayOption tmp = new PayOption(rs.getString("name"),rs.getDouble("percentage"),rs.getString("basis"));
+                    tmp.setId(rs.getInt("id"));
+                    retList.add(tmp);
+                }
             }
 
         } catch (SQLException e) {
@@ -607,7 +637,43 @@ public class DBHandler {
         return retList;
     }
 
-    
+    public synchronized static boolean setPayOptionDeleteStatus(String name){
+
+        int optID;
+
+        try{
+            stmt = connection.createStatement();
+            StringBuilder sql = new StringBuilder("");
+
+            sql.append("SELECT id FROM PayOptions WHERE name = '"+name+"'");
+            System.out.println(sql.toString()+"\n");
+            ResultSet rs = stmt.executeQuery(sql.toString());
+            if(!rs.next())
+                return false;
+            optID = rs.getInt("id");
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+
+        try{
+            stmt = connection.createStatement();
+            StringBuilder sql = new StringBuilder("");
+
+            sql.append("UPDATE PayOptions SET ");
+            sql.append("deleteStatus = 1 ");
+            sql.append("WHERE id = "+optID);
+
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql.toString());
+            return true;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
 
     /**
      * Returns activities ID
