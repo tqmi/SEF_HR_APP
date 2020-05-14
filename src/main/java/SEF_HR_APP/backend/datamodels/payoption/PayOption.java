@@ -74,6 +74,20 @@ public class PayOption implements DBEntry{
         return percentage;
     }
 
+    public String getBasis(){
+        return basis;
+    }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setPercentage(Double percentage){
+        this.percentage = percentage;
+    }
+
+    public void setBasis(String basis){
+        this.basis = basis;
+    }
     
 }
