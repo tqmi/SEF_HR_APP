@@ -44,7 +44,12 @@ public class DBHandler {
             System.out.println("Connecting to db ...");
             connection = DriverManager.getConnection(dbURL);
             System.out.println("Connection successful!Clearing DB...");
-            clearDB();
+            try{
+                clearDB();
+            }catch(SQLException e){
+                e.printStackTrace();
+                return false;
+            }
             System.out.println("DB cleared!");
             return true;
         } catch (SQLException e) {

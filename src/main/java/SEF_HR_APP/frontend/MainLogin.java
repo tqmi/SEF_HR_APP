@@ -24,7 +24,9 @@ public class MainLogin extends Application {
 
 	@Override
 	public void init() throws Exception {
-		DBHandler.connectDB();
+		if(!DBHandler.connectDB()){
+			System.exit(1);
+		}
 		MailService.initialize();
 		super.init();
 	}
