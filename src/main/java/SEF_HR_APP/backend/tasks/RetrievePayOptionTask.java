@@ -1,5 +1,6 @@
 package SEF_HR_APP.backend.tasks;
 
+import SEF_HR_APP.backend.database.DBHandler;
 import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import javafx.concurrent.Task;
 
@@ -9,8 +10,9 @@ public class RetrievePayOptionTask extends Task<PayOption> {
 
     @Override
     protected PayOption call() throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        if(data == null)
+            return null;
+        return DBHandler.getPayOption(data);
     }
 
     /**

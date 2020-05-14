@@ -1,5 +1,6 @@
 package SEF_HR_APP.backend.tasks;
 
+import SEF_HR_APP.backend.database.DBHandler;
 import SEF_HR_APP.backend.datamodels.payoption.PayOption;
 import javafx.concurrent.Task;
 
@@ -10,8 +11,9 @@ public class UpdatePayOptionTask extends Task<Boolean> {
 
     @Override
     protected Boolean call() throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        if(data == null)    
+            return false;
+        return DBHandler.updatePayOption(data);
     }
 
     /**

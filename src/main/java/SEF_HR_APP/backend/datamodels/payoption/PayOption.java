@@ -32,6 +32,10 @@ public class PayOption implements DBEntry{
         fieldValues[2] = "'" + basis + "'";
     }
 
+    public String getName(){
+        return name;
+    }
+
     public void setId(int id){
         this.id = id;
     }
