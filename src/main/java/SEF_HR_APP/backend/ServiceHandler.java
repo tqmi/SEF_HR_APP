@@ -21,7 +21,8 @@ public class ServiceHandler {
         DELETEACCOUNTSERVICE(new DeleteAccountService()),
         RESTOREACCOUNTSERVICE(new RestoreAccountService()),
         RETRIEVEPAYOPTIONSERVICE(new RetrievePayOptionService()),
-        UPDATEPAYOPTIONSERVICE(new UpdatePayOptionService());
+        UPDATEPAYOPTIONSERVICE(new UpdatePayOptionService()),
+        DELETEPAYOPTIONSERVICE(new DeletePayOptionService());
 
         private ServiceTemplate service;
 

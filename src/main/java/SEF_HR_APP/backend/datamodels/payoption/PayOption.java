@@ -5,9 +5,9 @@ import SEF_HR_APP.backend.database.DBEntry;
 public class PayOption implements DBEntry{
 
 
-    private static final String[] fieldNames = {"name","percentage","basis"};
+    private static final String[] fieldNames = {"name","percentage","basis","deleteStatus"};
     private String[] fieldValues;
-    private static final String[] fieldType = {"VARCHAR(255)  UNIQUE","DECIMAL(5,2)","VARCHAR(255)"};
+    private static final String[] fieldType = {"VARCHAR(255)  UNIQUE","DECIMAL(5,2)","VARCHAR(255)","SMALLINT"};
 
     private String name;
     private double percentage;
@@ -25,11 +25,12 @@ public class PayOption implements DBEntry{
         this.basis = basis;
 
 
-        fieldValues = new String[3];
+        fieldValues = new String[4];
 
         fieldValues[0] = "'" + name + "'";
         fieldValues[1] = String.valueOf(percentage);
         fieldValues[2] = "'" + basis + "'";
+        fieldValues[3] = String.valueOf(0);
     }
 
     public String getName(){
@@ -74,6 +75,7 @@ public class PayOption implements DBEntry{
         return percentage;
     }
 
+
     public String getBasis(){
         return basis;
     }
@@ -81,6 +83,13 @@ public class PayOption implements DBEntry{
     public void setName(String name){
         this.name = name;
         fieldValues[0] = "'" + name + "'";
+    }
+
+    public void setDeleteStatus(boolean stat){
+        if(stat)
+            fieldValues[3] = String.valueOf(1);
+        else
+            fieldValues[3] = String.valueOf(0);
     }
 
     public void setPercentage(Double percentage){

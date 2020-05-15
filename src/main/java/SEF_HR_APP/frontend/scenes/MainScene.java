@@ -101,7 +101,8 @@ public class MainScene extends Scene {
 		menuOpt2.setOnMouseClicked(new DeleteAccountHandler());
 		menuOpt3.setOnMouseClicked(new ModifyAccountHandler());
 		menuOpt4.setOnMouseClicked(new AddPayOptionHandler());
-		menuOpt6.setOnMouseClicked(new ModifyPayOptionHandler());
+		menuOpt5.setOnMouseClicked(new DeletePayOptionHandler());
+    menuOpt6.setOnMouseClicked(new ModifyPayOptionHandler());
 		menuOpt7.setOnMouseClicked(new ViewUserActivityHandler());
 		menuOpt8.setOnMouseClicked(new RequestActivityHandler());
 		menuOpt9.setOnMouseClicked(new ProvideActivityHandler());
@@ -222,16 +223,25 @@ public class MainScene extends Scene {
 			split.getItems().add(right);
 		}
 	}
+	
+  private class ModifyPayOptionHandler implements EventHandler<MouseEvent> {
+    @Override
+		public void handle(MouseEvent event)
+		{
+			split.getItems().remove(right);
+      right = new ModifyPayOptionScene();
+			split.getItems().add(right);
+		}
+	}
+	private class DeletePayOptionHandler implements EventHandler<MouseEvent> {
 
-	private class ModifyPayOptionHandler implements EventHandler<MouseEvent> {
 
 		@Override
 		public void handle(MouseEvent event)
 		{
 			split.getItems().remove(right);
-			right = new ModifyPayOptionScene();
+			right = new DeletePayOptionScene();
 			split.getItems().add(right);
 		}
 	}
-
 }
