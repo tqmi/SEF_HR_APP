@@ -33,6 +33,10 @@ public class PayOption implements DBEntry{
         fieldValues[3] = String.valueOf(0);
     }
 
+    public String getName(){
+        return name;
+    }
+
     public void setId(int id){
         this.id = id;
     }
@@ -71,6 +75,16 @@ public class PayOption implements DBEntry{
         return percentage;
     }
 
+
+    public String getBasis(){
+        return basis;
+    }
+
+    public void setName(String name){
+        this.name = name;
+        fieldValues[0] = "'" + name + "'";
+    }
+
     public void setDeleteStatus(boolean stat){
         if(stat)
             fieldValues[3] = String.valueOf(1);
@@ -78,5 +92,14 @@ public class PayOption implements DBEntry{
             fieldValues[3] = String.valueOf(0);
     }
 
+    public void setPercentage(Double percentage){
+        this.percentage = percentage;
+        fieldValues[1] = String.valueOf(percentage);
+    }
+
+    public void setBasis(String basis){
+        this.basis = basis;
+        fieldValues[2] = "'" + basis + "'";
+    }
     
 }

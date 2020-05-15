@@ -20,6 +20,8 @@ public class ServiceHandler {
         UPDATEUSERSERVICE(new UpdateUserService()),
         DELETEACCOUNTSERVICE(new DeleteAccountService()),
         RESTOREACCOUNTSERVICE(new RestoreAccountService()),
+        RETRIEVEPAYOPTIONSERVICE(new RetrievePayOptionService()),
+        UPDATEPAYOPTIONSERVICE(new UpdatePayOptionService()),
         DELETEPAYOPTIONSERVICE(new DeletePayOptionService());
 
         private ServiceTemplate service;

@@ -637,6 +637,52 @@ public class DBHandler {
         return retList;
     }
 
+    public synchronized static PayOption getPayOption(String name){
+        PayOption retval = null;
+        try {
+            stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM PayOptions WHERE name ='"+name+"'";     
+            System.out.println(sql.toString()+"\n");
+            ResultSet rs = stmt.executeQuery(sql);  
+
+            if(rs.next()){
+                retval = new PayOption(rs.getString("name"),rs.getDouble("percentage"),rs.getString("basis"));
+                retval.setId(rs.getInt("id"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return retval;
+    }
+    
+    public synchronized static Boolean updatePayOption(PayOption opt){
+        try {
+            stmt = connection.createStatement();
+
+            StringBuilder sql = new StringBuilder("");
+            
+            sql.append("UPDATE PayOptions SET ");
+
+            String[] fieldNames = opt.getFieldsName();
+            String[] fields = opt.getFieldsData();
+
+            for(int i = 0 ;i < fieldNames.length -1; i++){
+                sql.append(fieldNames[i] + "=" + fields[i] + ",");
+            }
+            sql.append(fieldNames[fields.length - 1] + "=" + fields[fields.length - 1]+ " WHERE name = '" + opt.getName()+"'");
+            System.out.println(sql.toString()+"\n");
+            stmt.executeUpdate(sql.toString());  
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        } 
+    }
+  
+  
     public synchronized static boolean setPayOptionDeleteStatus(String name){
 
         int optID;
@@ -671,8 +717,6 @@ public class DBHandler {
             e.printStackTrace();
             return false;
         }
-
-
     }
 
     /**
