@@ -80,14 +80,17 @@ public class PayOption implements DBEntry{
 
     public void setName(String name){
         this.name = name;
+        fieldValues[0] = "'" + name + "'";
     }
 
     public void setPercentage(Double percentage){
         this.percentage = percentage;
+        fieldValues[1] = String.valueOf(percentage);
     }
 
     public void setBasis(String basis){
         this.basis = basis;
+        fieldValues[2] = "'" + basis + "'";
     }
     
 }

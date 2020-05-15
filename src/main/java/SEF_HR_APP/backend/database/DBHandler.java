@@ -350,8 +350,8 @@ public class DBHandler {
                             rs.getString(fieldNames[2]), Seniority.valueOf(rs.getString(fieldNames[3])),
                             rs.getDouble(fieldNames[4]), rs.getInt(fieldNames[5]),
                             AccountType.valueOf(rs.getString(fieldNames[6])));
-                    findUser.setUsername(rs.getString(fieldNames[7]));
-                    findUser.setPasswordSHA(rs.getString(fieldNames[8]));
+                    findUser.setUsername(rs.getString(fieldNames[8]));
+                    findUser.setPasswordSHA(rs.getString(fieldNames[9]));
                     return findUser;
                 }
             }
