@@ -49,12 +49,7 @@ public class ServiceHandlerTest extends ApplicationTest {
     @BeforeClass
     public static void connectDB() {
         DBHandler.connectDB();
-		MailService.initialize();
-    }
-
-    @AfterClass
-    public static void closeDB() {
-        DBHandler.close();
+        MailService.initialize();
     }
 
     @Test

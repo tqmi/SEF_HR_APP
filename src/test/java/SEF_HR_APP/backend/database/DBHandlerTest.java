@@ -16,15 +16,10 @@ import SEF_HR_APP.backend.datamodels.user.User;
 import SEF_HR_APP.interfaces.LoginInfo;
 
 public class DBHandlerTest {
-    
-    @BeforeClass
-    public static void connectToDB(){
-        DBHandler.connectDB();
-    }
 
-    @AfterClass
-    public static void closeDB(){
-        DBHandler.close();
+    @BeforeClass
+    public static void connectToDB() {
+        DBHandler.connectDB();
     }
 
     @Test
@@ -62,8 +57,6 @@ public class DBHandlerTest {
         assertFalse("Same user should not be entered twice", DBHandler.insertUserIntoTable(newU));
 
         assertEquals(newU.getUsername(), DBHandler.getUser(newU.getUsername()).getUsername());
-
-
     }
 
 
