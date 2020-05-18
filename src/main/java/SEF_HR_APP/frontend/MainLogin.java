@@ -1,5 +1,8 @@
 package SEF_HR_APP.frontend;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import SEF_HR_APP.backend.ServiceHandler;
 import SEF_HR_APP.backend.database.DBHandler;
 import SEF_HR_APP.backend.datamodels.user.User;
@@ -22,6 +25,8 @@ public class MainLogin extends Application {
 
 	private Stage window;
 	private Scene scene;
+	private Image icon;
+	private FileInputStream stream;
 
 	@Override
 	public void init() throws Exception {
@@ -35,13 +40,24 @@ public class MainLogin extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		window = primaryStage;
-		window.setTitle("SHA Login");
+		window.setTitle("PayHelp Login");
 
 		//call for Event Handler to close program
 		window.setOnCloseRequest(new closeProgramHandler());
 
 		// instance for Login Scene
 		scene = new LoginScene(500, 350, this);
+
+		try {
+			stream = new FileInputStream("designElms\\icon.png");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		icon = new Image(stream);
+
+		window.getIcons().add(icon);
 
 		window.setScene(scene);
 		window.show();
@@ -68,7 +84,7 @@ public class MainLogin extends Application {
 	// implement transition to main scene
 	public void transToMainScene() {
 		Scene scene = new MainScene(600, 600, this);
-		window.setTitle("HRSolution");
+		window.setTitle("PayHelp");
 		window.setScene(scene);
 		window.show();
 	}
@@ -77,7 +93,7 @@ public class MainLogin extends Application {
 	public void transToLoginScene() {
 		User.resetCurrentUser();
 		Scene scene = new LoginScene(500, 350, this);
-		window.setTitle("SHA Login");
+		window.setTitle("PayHelp Login");
 		window.setScene(scene);
 		window.show();
 	}
