@@ -57,17 +57,39 @@ public class MainScene extends Scene {
 		// creating left menu panel with option buttons and logout button
 		scroll = new ScrollPane();
 		menuPanel = new VBox();
+		menuPanel.setPrefWidth(120);
+		menuPanel.setPrefHeight(40);
 
 		menuOpt1 = new Button("Create Account"); // admin, operator
+		menuOpt1.setMinWidth(menuPanel.getPrefWidth());
+		menuOpt1.setMinHeight(menuPanel.getPrefHeight());
 		menuOpt2 = new Button("Delete Account"); // admin, operator
+		menuOpt2.setMinWidth(menuPanel.getPrefWidth());
+		menuOpt2.setMinHeight(menuPanel.getPrefHeight());
 		menuOpt3 = new Button("Modify Account\n      Details"); // admin, operator
+		menuOpt3.setMinWidth(menuPanel.getPrefWidth());
+		menuOpt3.setMinHeight(menuPanel.getPrefHeight());
 		menuOpt4 = new Button("Add Pay Option"); // operator
+		menuOpt4.setMinWidth(menuPanel.getPrefWidth());
+		menuOpt4.setMinHeight(menuPanel.getPrefHeight());
 		menuOpt5 = new Button("Delete Pay Option"); // operator
+		menuOpt5.setMinWidth(menuPanel.getPrefWidth());
+		menuOpt5.setMinHeight(menuPanel.getPrefHeight());
 		menuOpt6 = new Button("Modify Pay Option"); // operator
+		menuOpt6.setMinWidth(menuPanel.getPrefWidth());
+		menuOpt6.setMinHeight(menuPanel.getPrefHeight());
 		menuOpt7 = new Button("View User Activity"); // operator, supervisor
+		menuOpt7.setMinWidth(menuPanel.getPrefWidth());
+		menuOpt7.setMinHeight(menuPanel.getPrefHeight());
 		menuOpt8 = new Button("Request Activity\n     Information"); // employee, supervisor
+		menuOpt8.setMinWidth(menuPanel.getPrefWidth());
+		menuOpt8.setMinHeight(menuPanel.getPrefHeight());
 		menuOpt9 = new Button("Provide Activity\n     Information"); // employee, supervisor
+		menuOpt9.setMinWidth(menuPanel.getPrefWidth());
+		menuOpt9.setMinHeight(menuPanel.getPrefHeight());
 		logout_button = new Button("Logout");
+		logout_button.setMinWidth(menuPanel.getPrefWidth());
+		logout_button.setMinHeight(menuPanel.getPrefHeight());
 
 		// switch statement for providing user with proper commands based on access
 		// rights
@@ -114,7 +136,7 @@ public class MainScene extends Scene {
 		background = new Image(stream);
 		imview = new ImageView(background);
 
-		imview.setFitHeight(600);
+		imview.setFitHeight(1000);
 		imview.setFitWidth(375);
 		imview.setPreserveRatio(true);
 
