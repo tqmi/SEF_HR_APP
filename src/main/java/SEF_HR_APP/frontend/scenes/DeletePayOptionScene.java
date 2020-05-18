@@ -13,9 +13,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class DeletePayOptionScene extends GridPane {
 
+    private Text scenetitle;
     private Label payopt;
     private TextField paybox;
     private Button delete_button;
@@ -30,9 +33,13 @@ public class DeletePayOptionScene extends GridPane {
         this.setVgap(10);
         this.setPadding(new Insets(25, 25, 25, 25));
 
-        payopt = new Label("Pay Option:");
-        this.add(payopt, 1, 0);
+        //simple Title label & pos
+        scenetitle = new Text("Please choose the pay option you want to delete.");
+        scenetitle.setFont(Font.font("Verdana"));
+        this.add(scenetitle, 0, 0, 2, 1);
 
+        payopt = new Label("Pay Option:");
+        this.add(payopt, 0, 1);
         paybox = new TextField();
         this.add(paybox, 1, 1);
 

@@ -42,7 +42,7 @@ public class AddPayOptionScene extends GridPane {
         this.setPadding(new Insets(25, 25, 25, 25));
         
         //simple Title label & pos
-        scenetitle = new Text("Please fill in pay option information.");
+        scenetitle = new Text("Please fill in the required information for adding a new pay option.");
         scenetitle.setFont(Font.font("Verdana"));
         this.add(scenetitle, 0, 0, 2, 1);
 

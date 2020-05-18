@@ -31,6 +31,7 @@ public class ModifyAccountScene extends GridPane{
     private Button loadUserBtn;
 
     private Text scenetitle;
+    private Text scenetitle1;
 
     private Label name;
     private TextField namebox;
@@ -63,73 +64,76 @@ public class ModifyAccountScene extends GridPane{
     {
         super();
 
-        this.setAlignment(Pos.CENTER_LEFT);
+        this.setAlignment(Pos.TOP_LEFT);
 		this.setHgap(10);
 		this.setVgap(10);
-		this.setPadding(new Insets(25, 25, 25, 25));
-
+        this.setPadding(new Insets(25, 25, 25, 25));
+        
+        scenetitle = new Text("Please choose account you want to modify.");
+        scenetitle.setFont(Font.font("Verdana"));
         username = new Label("Username : ");
         usernamebox = new TextField();
         loadUserBtn = new Button("Load");
         loadUserBtn.setOnMouseClicked(new LoadUserHandler());
 
-        this.add(username, 0, 0);
-        this.add(usernamebox, 1, 0);
-        this.add(loadUserBtn, 2, 0);
+        this.add(scenetitle, 0, 0, 2, 1);
+        this.add(username, 0, 1);
+        this.add(usernamebox, 1, 1);
+        this.add(loadUserBtn, 2, 1);
 
         //simple Title label & pos
-        scenetitle = new Text("Please fill in the following form.");
-        scenetitle.setFont(Font.font("Verdana"));
-        this.add(scenetitle, 0, 1, 2, 1);
+        scenetitle1 = new Text("Please modify desired fields regarding account information.");
+        scenetitle1.setFont(Font.font("Verdana"));
+        this.add(scenetitle1, 0, 7, 2, 1);
         
         //full name 
         name = new Label("Enter employee full name:");
-        this.add(name, 0, 2);
+        this.add(name, 0, 8);
 		namebox = new TextField();	
-        this.add(namebox, 1, 2);       
+        this.add(namebox, 1, 8);       
 
         //work position
         position = new Label("Choose employee position:");
-        this.add(position, 0, 3);
+        this.add(position, 0, 9);
         posbox = new ComboBox<>();
         posbox.getItems().addAll(Arrays.asList(Position.values()));
-        this.add(posbox, 1, 3);
+        this.add(posbox, 1, 9);
 
         //work email
         email = new Label("Enter employee email:");
-        this.add(email, 0, 4);
+        this.add(email, 0, 10);
         emailbox = new TextField();
-        this.add(emailbox, 1, 4);
+        this.add(emailbox, 1, 10);
 
         //seniority in work domain
         seniority = new Label("Choose employee seniority:");
-        this.add(seniority, 0, 5);
+        this.add(seniority, 0, 11);
         senbox = new ComboBox<>();
         senbox.getItems().addAll(Arrays.asList(Seniority.values()));
-        this.add(senbox, 1, 5);
+        this.add(senbox, 1, 11);
 
         //base salary
         salary = new Label("Enter employee base salary:");
-        this.add(salary, 0, 6);
+        this.add(salary, 0, 12);
         salarybox = new TextField();
-        this.add(salarybox, 1, 6);
+        this.add(salarybox, 1, 12);
         
         //yearly leave days
         leaveDays = new Label("Enter yearly leave days:");
-        this.add(leaveDays, 0, 7);
+        this.add(leaveDays, 0, 13);
         leaveDaysbox = new TextField();
-        this.add(leaveDaysbox, 1, 7);
+        this.add(leaveDaysbox, 1, 13);
 
         //account type
         accType = new Label("Choose account type:");
-        this.add(accType, 0, 8);
+        this.add(accType, 0, 14);
         accTypebox = new ComboBox<>();
         accTypebox.getItems().addAll(Arrays.asList(AccountType.values()));
-        this.add(accTypebox, 1, 8);
+        this.add(accTypebox, 1, 14);
 
         saveBtn = new Button("Save");
         saveBtn.setOnMouseClicked(new SaveUserHandler());
-        this.add(saveBtn, 0, 9);
+        this.add(saveBtn, 0, 15);
         
         ServiceHandler.setOnSucceededHandler(ServiceID.RETRIEVEUSERSERVICE, new UserLoadedHandler());
         ServiceHandler.setOnSucceededHandler(ServiceID.UPDATEUSERSERVICE, new UserSavedHandler());

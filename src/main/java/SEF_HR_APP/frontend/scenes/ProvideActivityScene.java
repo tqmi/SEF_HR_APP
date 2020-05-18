@@ -23,10 +23,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class ProvideActivityScene extends GridPane {
     
 
+    private Text scenetitle;
     private Label month;
     private ComboBox<MonthType> monthBox;
     private Button addNewBtn;
@@ -40,9 +43,11 @@ public class ProvideActivityScene extends GridPane {
     private DeleteHandler deleteHandler;
     private ArrayList<Button> deleteBtns;
 
-    public ProvideActivityScene(){
+    public ProvideActivityScene() {
+
         super();
         this.instance = this;
+
         this.setAlignment(Pos.TOP_LEFT);
         this.setHgap(10);
         this.setVgap(10);
@@ -50,27 +55,31 @@ public class ProvideActivityScene extends GridPane {
         
         deleteHandler = new DeleteHandler();
 
+
+        scenetitle = new Text("Please choose desired month and press + for adding option.");
+        scenetitle.setFont(Font.font("Verdana"));
         month = new Label("Month:");
         monthBox = new ComboBox<>();
         monthBox.getItems().addAll(Arrays.asList(MonthType.values()));
 
-        this.add(month, 0, 0);
-        this.add(monthBox, 1, 0);
+        //this.add(scenetitle, 0, 0, 2, 1);
+        this.add(month, 0, 1);
+        this.add(monthBox, 1, 1);
         
         loadBtn = new Button("Load");
         loadBtn.setOnMouseClicked(new LoadActivityHandler());
         ServiceHandler.setOnSucceededHandler(ServiceID.RETRIEVEACTIVITYSERVICE,new ActivityLoadedHandler());
-        this.add(loadBtn, 2, 0);
+        this.add(loadBtn, 2, 1);
 
         saveBtn = new Button("Save");
         saveBtn.setOnMouseClicked(new StoreActivityHandler());
         ServiceHandler.setOnSucceededHandler(ServiceID.STOREACTIVITYSERVICE,new ActivityStoredHandler());
-        this.add(saveBtn, 3, 0);
+        this.add(saveBtn, 3, 1);
 
-        addNewBtn = new Button("+");
+        addNewBtn = new Button("Add Entry");
         addNewBtn.setOnMouseClicked(new AddNewOptionHandler());
         addNewBtn.maxWidthProperty().bind(this.widthProperty());
-        this.add(addNewBtn, 0, 1, 3, 1);
+        this.add(addNewBtn, 0, 3);
 
         options = new ArrayList<>();
         hours = new ArrayList<>();

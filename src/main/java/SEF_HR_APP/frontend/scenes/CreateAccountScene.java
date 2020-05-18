@@ -60,7 +60,7 @@ public class CreateAccountScene extends GridPane {
 		this.setPadding(new Insets(25, 25, 25, 25));
 
         //simple Title label & pos
-        scenetitle = new Text("Please fill in the following form.");
+        scenetitle = new Text("Please fill in the required information for creating a new account.");
         scenetitle.setFont(Font.font("Verdana"));
         this.add(scenetitle, 0, 0, 2, 1);
         
