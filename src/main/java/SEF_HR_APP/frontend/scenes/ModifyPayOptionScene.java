@@ -18,11 +18,12 @@ import javafx.scene.text.Text;
 
 public class ModifyPayOptionScene extends GridPane {
 
+    private Text scenetitle;
     private Label payopt;
     private TextField paybox;
     private Button load_button;
 
-    private Text scenetitle;
+    private Text scenetitle1;
     private Label name;
     private TextField namebox;
     private Label percentage;
@@ -38,50 +39,55 @@ public class ModifyPayOptionScene extends GridPane {
     {
         super();
 
-        this.setAlignment(Pos.CENTER_LEFT);
+        this.setAlignment(Pos.TOP_LEFT);
 		this.setHgap(10);
 		this.setVgap(10);
         this.setPadding(new Insets(25, 25, 25, 25));
+
+        scenetitle = new Text("Please choose option you want to modify.");
+        scenetitle.setFont(Font.font("Verdana"));
+        this.add(scenetitle, 0, 0, 2, 1);
+
         
         payopt = new Label("Pay option:");
-        this.add(payopt, 0, 0);
+        this.add(payopt, 0, 1);
 
         paybox = new TextField();
-        this.add(paybox, 1, 0);
+        this.add(paybox, 1, 1);
 
         load_button = new Button("Load");
-        this.add(load_button, 2, 0);
+        this.add(load_button, 2, 1);
 
         load_button.setOnMouseClicked(new LoadPayOptionHandler());
 
         /////
         //simple Title label & pos
-        scenetitle = new Text("Please fill in pay option information.");
-        scenetitle.setFont(Font.font("Verdana"));
-        this.add(scenetitle, 0, 1, 2, 1);
+        scenetitle1 = new Text("Please modify desired fields regarding pay option information.");
+        scenetitle1.setFont(Font.font("Verdana"));
+        this.add(scenetitle1, 0, 8, 2, 1);
 
         //pay option name 
         name = new Label("Type in a new pay option:");
-        this.add(name, 0, 2);
+        this.add(name, 0, 9);
 		namebox = new TextField();	
-        this.add(namebox, 1, 2);       
+        this.add(namebox, 1, 9);       
 
         //pay percentage 
         percentage = new Label("Enter pay percentage:");
-        this.add(percentage, 0, 3);
+        this.add(percentage, 0, 10);
 		perbox = new TextField();	
-        this.add(perbox, 1, 3);
+        this.add(perbox, 1, 10);
         perc = new Text("%");
-        this.add(perc, 2, 3);
+        this.add(perc, 2, 10);
 
         //legal basis 
         legalBasis = new Label("Enter legal basis for pay option:");
-        this.add(legalBasis, 0, 4);
+        this.add(legalBasis, 0, 11);
 		legbox = new TextField();	
-        this.add(legbox, 1, 4);      
+        this.add(legbox, 1, 11);      
 
         save_button = new Button("Save");
-        this.add(save_button, 1, 5);
+        this.add(save_button, 0, 12);
 
         save_button.setOnMouseClicked(new SavePayOptionHandler());
 
@@ -118,7 +124,7 @@ public class ModifyPayOptionScene extends GridPane {
                 AlertBoxLogIn.display("Alert", "Option updated!");
                 return;
             }else{
-                AlertBoxLogIn.display("Alert", "Something went wrong!");
+                AlertBoxLogIn.display("Alert", "Could not uptade option information!");
             }
 
         }

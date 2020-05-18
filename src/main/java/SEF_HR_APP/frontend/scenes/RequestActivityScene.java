@@ -21,10 +21,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class RequestActivityScene extends GridPane {
 
+    private Text scenetitle;
     private Label month;
     private ComboBox<MonthType> monthBox;
     private Button loadBtn;
@@ -33,25 +35,29 @@ public class RequestActivityScene extends GridPane {
 
 
     public RequestActivityScene() {
-        super();
 
+        super();
         this.instance = this;
+
         this.setAlignment(Pos.TOP_LEFT);
         this.setHgap(10);
         this.setVgap(10);
         this.setPadding(new Insets(25, 25, 25, 25));
-        
+
+        scenetitle = new Text("Please choose a month to visualise.");
+        scenetitle.setFont(Font.font("Verdana"));
         month = new Label("Month:");
         monthBox = new ComboBox<>();
         monthBox.getItems().addAll(Arrays.asList(MonthType.values()));
 
-        this.add(month, 0, 0);
-        this.add(monthBox, 1, 0);
+        this.add(scenetitle, 0, 0, 2, 1);
+        this.add(month, 0, 1);
+        this.add(monthBox, 1, 1);
 
         loadBtn = new Button("Load");
         loadBtn.setOnMouseClicked(new LoadActivityHandler());
         ServiceHandler.setOnSucceededHandler(ServiceID.RETRIEVEACTIVITYSERVICE,new ActivityLoadedHandler());
-        this.add(loadBtn, 2, 0);
+        this.add(loadBtn, 2, 1);
 
         entries = new ArrayList<>();
 

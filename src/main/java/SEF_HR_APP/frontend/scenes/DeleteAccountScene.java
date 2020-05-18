@@ -14,9 +14,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class DeleteAccountScene extends GridPane {
 
+    private Text scenetitle;
     private Label username;
     private TextField userbox;
     private Button delete_button;
@@ -32,16 +35,21 @@ public class DeleteAccountScene extends GridPane {
         this.setVgap(10);
         this.setPadding(new Insets(25, 25, 25, 25));
 
+        //simple Title label & pos
+        scenetitle = new Text("Please choose the account you want to delete.");
+        scenetitle.setFont(Font.font("Verdana"));
+        this.add(scenetitle, 0, 0, 2, 1);
+
         //account user name
         username = new Label("Enter username:");
-        this.add(username, 0, 0);
+        this.add(username, 0, 1);
 
         userbox = new TextField();
-        this.add(userbox, 1, 0);
+        this.add(userbox, 1, 1);
 
         //instance for account deletion button
         delete_button = new Button("Delete");
-        this.add(delete_button, 1, 1);
+        this.add(delete_button, 1, 2);
 
         delete_button.setOnMouseClicked(new DeleteAccountHandler());
         ServiceHandler.setOnSucceededHandler(ServiceID.DELETEACCOUNTSERVICE, new AccDeletionSuccessfulHandler() );

@@ -66,7 +66,7 @@ public class ViewUserActivityScene extends GridPane {
 
         loadBtn = new Button("Load");
         loadBtn.setOnMouseClicked(new LoadUserHandler());
-        this.add(loadBtn, 2, 0,1,2);
+        this.add(loadBtn, 2, 1, 2, 1);
 
         review = new Label("Review status :");
         reviewBox = new ComboBox<>();
@@ -153,7 +153,7 @@ public class ViewUserActivityScene extends GridPane {
             selectedUser = ServiceHandler.getValues(ServiceID.RETRIEVEUSERSERVICE);
 
             if(selectedUser == null){
-                AlertBoxLogIn.display("Alert", "User not found or permission denied!");
+                AlertBoxLogIn.display("Alert", "Account not found or permission denied!");
                 return;
             }
 
