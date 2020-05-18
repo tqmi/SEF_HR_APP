@@ -153,7 +153,7 @@ public class ViewUserActivityScene extends GridPane {
             selectedUser = ServiceHandler.getValues(ServiceID.RETRIEVEUSERSERVICE);
 
             if(selectedUser == null){
-                AlertBoxLogIn.display("Alert", "User not found or permission denied!");
+                AlertBoxLogIn.display("Alert", "Account not found or permission denied!");
                 return;
             }
 

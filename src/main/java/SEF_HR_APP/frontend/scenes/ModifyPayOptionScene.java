@@ -124,7 +124,7 @@ public class ModifyPayOptionScene extends GridPane {
                 AlertBoxLogIn.display("Alert", "Option updated!");
                 return;
             }else{
-                AlertBoxLogIn.display("Alert", "Something went wrong!");
+                AlertBoxLogIn.display("Alert", "Could not uptade option information!");
             }
 
         }

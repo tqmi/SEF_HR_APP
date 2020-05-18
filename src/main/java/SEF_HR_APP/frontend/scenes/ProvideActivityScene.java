@@ -210,7 +210,7 @@ public class ProvideActivityScene extends GridPane {
             
             for(int i = 0 ; i < options.size() ; i++){
                 if(options.get(i).getSelectionModel().getSelectedItem() == null || hours.get(i).getText().trim().isEmpty() || !numericPattern.matcher(hours.get(i).getText().trim()).matches()){
-                    AlertBoxLogIn.display("Alert", "You must complete all fields!");
+                    AlertBoxLogIn.display("Alert", "All fields are mandatory!");
                     return;
                 }
             }
@@ -224,7 +224,7 @@ public class ProvideActivityScene extends GridPane {
 
             ServiceHandler.setValues(ServiceID.STOREACTIVITYSERVICE,activity);
             ServiceHandler.startService(ServiceID.STOREACTIVITYSERVICE);
-            AlertBoxLogIn.display("Alert", "Storing activity");
+            AlertBoxLogIn.display("Alert", "Storing activity...");
 
         }
     }
@@ -234,9 +234,9 @@ public class ProvideActivityScene extends GridPane {
         @Override
         public void handle(Event event) {
             if((boolean)ServiceHandler.getValues(ServiceID.STOREACTIVITYSERVICE))
-                AlertBoxLogIn.display("Success", "Activity stored");
+                AlertBoxLogIn.display("Success", "Activity stored successfully!");
             else
-                AlertBoxLogIn.display("Failed", "Save failed");
+                AlertBoxLogIn.display("Failed", "Storing activity failed!");
            
         }
     }

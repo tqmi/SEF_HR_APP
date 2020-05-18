@@ -172,10 +172,10 @@ public class ModifyAccountScene extends GridPane{
         @Override
         public void handle(Event event) {
             if((boolean)ServiceHandler.getValues(ServiceID.UPDATEUSERSERVICE)){
-                AlertBoxLogIn.display("Alert", "User updated!");
+                AlertBoxLogIn.display("Alert", "Account updated!");
                 return;
             }else{
-                AlertBoxLogIn.display("Alert", "Something went wrong!");
+                AlertBoxLogIn.display("Alert", "Could not update account information!");
             }
 
         }
@@ -205,7 +205,7 @@ public class ModifyAccountScene extends GridPane{
             selectedUser = ServiceHandler.getValues(ServiceID.RETRIEVEUSERSERVICE);
 
             if(selectedUser == null){
-                AlertBoxLogIn.display("Alert", "User not found or permission denied!");
+                AlertBoxLogIn.display("Alert", "Employee not found or permission denied!");
                 return;
             }
 

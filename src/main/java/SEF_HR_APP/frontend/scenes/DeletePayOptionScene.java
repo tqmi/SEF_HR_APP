@@ -57,7 +57,7 @@ public class DeletePayOptionScene extends GridPane {
         @Override
         public void handle(MouseEvent event) {
             
-            if(TEMPConfirmBox.display("Attention", "Are you sure you want to delete this option?"))
+            if(TEMPConfirmBox.display("Alert", "Are you sure you want to delete this option?"))
             {
                 ServiceHandler.setValues(ServiceID.DELETEPAYOPTIONSERVICE, paybox.getText());
                 ServiceHandler.startService(ServiceID.DELETEPAYOPTIONSERVICE);
