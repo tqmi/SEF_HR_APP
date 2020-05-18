@@ -20,8 +20,9 @@ plugins {
 }
 
 javafx {
-    modules = [ 'javafx.controls', 'javafx.fxml','javafx.base','javafx.graphics','javafx.media']
+    modules = [ 'javafx.controls', 'javafx.fxml','javafx.base','javafx.graphics','javafx.media','javafx.swing']
     mainClassName = 'SEF_HR_APP.MainLogIn'
+    version = '12'
 }
 
 
@@ -31,6 +32,7 @@ repositories {
     
     mavenLocal()
     mavenCentral()
+    jcenter()
 }
 
 
@@ -53,15 +55,19 @@ dependencies {
     //testImplementation 'junit:junit:4.12'
 
 
-     //compile 'com.fasterxml.jackson.core:jackson-databind:2.11.0.rc1'
-     //compile 'org.apache.commons:commons-io:1.3.2'
-     compile "org.openjfx:javafx-base:11:${platform}"
-     compile "org.openjfx:javafx-graphics:11:${platform}"
-     compile "org.openjfx:javafx-controls:11:${platform}"
-     compile "org.openjfx:javafx-fxml:11:${platform}"
-     compile "org.openjfx:javafx-media:11:${platform}"
-     compile group: 'org.apache.derby', name: 'derby', version: '10.15.2.0'
-     compile group: 'javax.mail', name: 'mail', version: '1.4'
+    //compile 'com.fasterxml.jackson.core:jackson-databind:2.11.0.rc1'
+    //compile 'org.apache.commons:commons-io:1.3.2'
+    compile "org.openjfx:javafx-base:12:${platform}"
+    compile "org.openjfx:javafx-graphics:12:${platform}"
+    compile "org.openjfx:javafx-controls:12:${platform}"
+    compile "org.openjfx:javafx-fxml:12:${platform}"
+    compile "org.openjfx:javafx-media:12:${platform}"
+    compile "org.openjfx:javafx-swing:12:${platform}"
+    compile group: 'org.apache.derby', name: 'derby', version: '10.15.2.0'
+    compile group: 'javax.mail', name: 'mail', version: '1.4'
+    testCompile "junit:junit:4.13-beta-3"
+    testCompile "org.testfx:testfx-junit:4.0.16-alpha"
+    compile group: 'org.assertj', name: 'assertj-core', version: '3.13.2'
 }
 
 sourceCompatibility = '11.0.1'
